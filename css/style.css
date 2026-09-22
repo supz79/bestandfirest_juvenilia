@@ -1,0 +1,1814 @@
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#111827;background:#f3f4f6;line-height:1.4}
+*{box-sizing:border-box}body{margin:0}.topbar{height:70px;background:#111827;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 980px)/2))}
+.brand{display:flex;align-items:center;gap:11px}.brand-mark{font-size:28px}.brand strong{display:block;font-size:18px}.brand small{display:block;color:#9ca3af;font-size:11px}.ghost{background:transparent;border:1px solid #374151;color:#fff;border-radius:10px;padding:8px 13px}
+main{max-width:980px;margin:auto;padding:22px 16px 50px}.screen{display:none}.screen.active{display:block}.card{background:white;border:1px solid #e5e7eb;border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 5px 20px rgba(17,24,39,.05)}
+.hero{display:flex;justify-content:space-between;align-items:center;background:#111827;color:white;min-height:150px}.hero h1{font-size:34px;margin:5px 0}.hero p{color:#9ca3af;margin:0}.hero-ball{font-size:72px}.eyebrow{font-size:10px;letter-spacing:.14em;font-weight:800;color:#6b7280}.hero .eyebrow{color:#9ca3af}
+.grid{display:grid;gap:14px}.two{grid-template-columns:repeat(2,1fr)}.action{text-align:left;cursor:pointer;transition:.15s}.action:hover{transform:translateY(-2px)}.action span{font-size:27px;display:block;margin-bottom:10px}.action b,.action small{display:block}.action small,.muted{color:#6b7280}.status>div:first-child{display:flex;justify-content:space-between;align-items:start}.pill{padding:6px 10px;border-radius:999px;font-size:10px;font-weight:800}.pill.open{background:#dcfce7;color:#166534}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:18px 0 8px}.progress span{display:block;height:100%;width:0;background:#111827}
+.match-countdown{font-weight:800;font-size:15px;color:#111827;margin:10px 0 2px}
+.section-head{display:flex;align-items:center;gap:10px;margin:10px 0 18px}.section-head h2{margin:2px 0;font-size:27px}.back{border:0;background:white;border-radius:12px;width:42px;height:42px;font-size:30px;cursor:pointer}.match-meta{display:flex;justify-content:space-between;color:#6b7280;font-size:13px;margin-bottom:14px}
+.check-list{display:grid;gap:8px;margin:18px 0}.check{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #e5e7eb;border-radius:12px}.check input{width:18px;height:18px}.check.locked{opacity:.75}
+.primary,.danger{border:0;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}.primary{background:#111827;color:white}.danger{background:#fee2e2;color:#991b1b}
+label{display:block;font-weight:700;margin:14px 0}select{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid #d1d5db;border-radius:10px;background:white}.success{color:#166534;font-weight:700}.hidden{display:none!important}
+.tabs{display:flex;gap:6px;margin-bottom:12px}.tab{border:1px solid #d1d5db;background:white;padding:9px 15px;border-radius:10px;cursor:pointer}.tab.active{background:#111827;color:white}
+.rank{display:grid;grid-template-columns:45px 1fr 70px;align-items:center;padding:13px 4px;border-bottom:1px solid #eee}.rank:last-child{border-bottom:0}.rank .pos{font-size:21px}.points{text-align:right;font-weight:900}.sub{display:block;color:#6b7280;font-size:11px}.rule{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee}.rule:last-child{border:0}
+@media(max-width:650px){.two{grid-template-columns:1fr}.hero h1{font-size:28px}.hero-ball{font-size:55px}.match-meta{display:block}.match-meta span{display:block;margin:3px 0}}
+
+/* Beta.3 Firebase Authentication */
+.login-card { max-width: 520px; margin: 48px auto; }
+.login-card form { display: grid; gap: 14px; }
+.login-card input { width: 100%; box-sizing: border-box; margin-top: 6px; }
+
+/* Beta.7 Calendario */
+.calendar-toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.calendar-toolbar h3{margin:0 0 4px}.import-box{display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px;border:1px dashed #cbd5e1;border-radius:12px}.file-btn{display:inline-block;background:#111827;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;margin:0}.file-btn input{display:none}.calendar-group{margin-bottom:20px}.calendar-group h3{margin:6px 4px 10px}.calendar-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:13px 15px;margin-bottom:8px;box-shadow:0 3px 12px rgba(17,24,39,.04)}.calendar-row>div{display:grid;grid-template-columns:42px 1fr;column-gap:10px}.calendar-row b{grid-row:span 2}.calendar-row span{font-weight:700}.calendar-row small{color:#6b7280}.small-btn{border:1px solid #d1d5db;background:#fff;border-radius:9px;padding:8px 10px;cursor:pointer}.pill.warn{background:#fef3c7;color:#92400e}.pill.closed{background:#fee2e2;color:#991b1b}.import-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #eee}.import-row>div{display:grid;grid-template-columns:95px 1fr;column-gap:10px}.import-row b{grid-row:span 2}.import-row small{color:#6b7280}.import-badge{font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px}.import-badge.new{background:#dcfce7;color:#166534}.import-badge.change{background:#dbeafe;color:#1d4ed8}.warning{color:#92400e;font-size:12px}.modal{position:fixed;inset:0;background:rgba(17,24,39,.5);display:flex;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.hidden{display:none}.modal-card{background:#fff;border-radius:18px;padding:20px;width:min(680px,100%);max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid label{margin:8px 0}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.ghost.dark{color:#111827;border-color:#d1d5db;background:#fff}
+@media(max-width:650px){.calendar-toolbar,.import-box{display:block}.calendar-toolbar .primary{margin-top:12px}.calendar-row{grid-template-columns:1fr}.import-row{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
+
+/* Interazione visiva delle partite cliccabili */
+#dashboardMatchCard.is-clickable {cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background-color .2s ease}
+#dashboardMatchCard.is-clickable:hover,#dashboardMatchCard.is-clickable:focus-visible {transform:translateY(-3px);box-shadow:0 12px 28px rgba(17,24,39,.12);border-color:#94a3b8;outline:none}
+#dashboardMatchCard.is-clickable:active {transform:translateY(-1px)}
+#dashboardMatchCard.is-clickable #matchTitle::after {content:'  ↗';font-size:.7em;opacity:.55}
+.pending-user { gap: 12px; }
+.small-action { padding: 9px 12px; font-size: .88rem; margin-left: auto; }
+#pendingRegistrations, #adminPlayersList { margin-top: 12px; }
+/* Beta 7.17.1 - visibilita' pulsante registrazione */
+.login-card .ghost { color:#111827; border-color:#374151; background:#fff; }
+.login-card .ghost:hover { background:#f3f4f6; }
+
+/* Beta 7.17.2 - Logo multisport */
+.topbar{background:#fff;color:#111827;border-bottom:1px solid #e5e7eb;min-height:82px;}
+.brand{display:flex;align-items:center;}
+.brand-logo{display:block;width:min(290px,52vw);height:auto;max-height:64px;object-fit:contain;object-position:left center;}
+.topbar .ghost{color:#111827;border-color:#d1d5db;background:#fff;}
+.topbar .ghost:hover{background:#f3f4f6;}
+.login-card{padding:26px 24px 24px;}
+.login-logo{display:block;width:min(430px,92%);height:auto;margin:0 auto 18px;object-fit:contain;}
+.login-card .section-head{margin-top:4px;}
+@media(max-width:650px){.topbar{min-height:70px}.brand-logo{width:min(245px,62vw);max-height:52px}.login-logo{width:96%;margin-bottom:14px;}}
+.verify-email{font-weight:800;font-size:18px;text-align:center;word-break:break-word;color:#111827;margin:4px 0 18px}.verify-actions{display:grid;gap:10px}.login-card .verify-actions .ghost{color:#111827;border-color:#374151;background:#fff}.login-card .verify-actions .ghost:hover{background:#f3f4f6}
+
+/* Beta 7.19 - statistiche partita e stagione */
+.stats-grid{display:grid;grid-template-columns:minmax(180px,1.4fr) repeat(5,minmax(72px,.55fr));gap:10px;align-items:center}.stats-header{font-size:.78rem;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.stats-row{display:grid;grid-template-columns:minmax(180px,1.4fr) repeat(5,minmax(72px,.55fr));gap:10px;align-items:center;padding:12px 0;border-top:1px solid #e5e7eb}.stats-row b{font-size:.95rem}.stats-row.stats-readonly{grid-template-columns:minmax(180px,1.4fr) repeat(5,minmax(72px,.55fr))}.stats-row label{display:flex;align-items:center;gap:7px;justify-content:center;font-size:.82rem;color:#475569}.stats-row input[type=number]{width:72px;padding:9px 8px;text-align:center}.stats-row input[type=checkbox]{width:18px;height:18px}.stats-note{font-size:.78rem;color:#64748b}.stats-season{margin-top:18px}.stats-season .stats-row{grid-template-columns:minmax(180px,1.6fr) repeat(6,minmax(68px,.55fr))}.stats-season .stats-header{display:grid;grid-template-columns:minmax(180px,1.6fr) repeat(6,minmax(68px,.55fr));gap:10px}
+@media(max-width:760px){.stats-grid,.stats-row,.stats-season .stats-row{grid-template-columns:minmax(150px,1.4fr) repeat(6,62px)}.stats-season .stats-row{grid-template-columns:minmax(150px,1.35fr) repeat(6,58px);overflow-x:auto}.stats-season{overflow-x:auto}.stats-row input[type=number]{width:58px}.stats-row{min-width:575px}.stats-season .stats-header{min-width:500px}}
+
+/* Beta 7.20 - storico partite, risultati e MVP */
+.match-result-editor{margin:0 0 18px;padding:15px;border:1px solid #e5e7eb;border-radius:14px;background:#f8fafc}.result-editor-title{font-weight:900;margin-bottom:10px}.result-inputs{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end}.result-inputs label{margin:0}.result-inputs input{width:100%;margin-top:6px;padding:11px;border:1px solid #d1d5db;border-radius:10px}.result-inputs>span{font-weight:900;font-size:22px;padding-bottom:8px}.calendar-actions{display:flex;gap:6px}.played-match-card{cursor:pointer;transition:.15s}.played-match-card:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(17,24,39,.08)}.played-match-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.played-match-head h3{margin:5px 0}.played-match-head small{color:#6b7280}.played-match-body{margin-top:14px}.played-score{font-size:25px;text-align:center;padding:14px;border-radius:12px;background:#f8fafc}.played-score b{font-size:32px;margin:0 10px}.mvp-box{margin-top:10px;padding:13px;border-radius:12px;background:#ecfdf5;color:#166534;text-align:center}.played-player-row{display:grid;grid-template-columns:minmax(180px,1fr) repeat(6,70px);gap:10px;align-items:center;padding:10px 0;border-top:1px solid #e5e7eb}.played-player-row span{text-align:center}.played-header{font-size:.75rem;color:#64748b;font-weight:800;text-transform:uppercase}.played-stats{margin-top:12px}.score-placeholder{color:#94a3b8}@media(max-width:760px){.calendar-actions{flex-wrap:wrap}.played-player-row{grid-template-columns:minmax(145px,1fr) repeat(6,55px);min-width:575px}.played-stats{overflow-x:auto}.result-inputs{grid-template-columns:1fr auto 1fr}}
+.result-auto-score{display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:end}.result-auto-score strong{font-size:30px;line-height:1}.result-auto-score small{font-size:.72rem;color:#64748b}.result-team{font-weight:800}.scorers-line{margin-top:10px;padding:12px 14px;border-radius:12px;background:#f8fafc;text-align:center}.scorers-line b{margin-right:5px}
+
+/* Beta 7.25 - Tema grafico per lega, attivo dinamicamente da Firestore. */
+:root{--league-primary:#159447;--league-primary-dark:#0d6b32;--league-primary-soft:#effaf3;--league-border:#cfe7d6;--league-muted:#5a7463;}
+.league-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#ffffff 0%,#fbfefc 52%,var(--league-primary-soft) 100%);color:var(--league-primary-dark);border:1px solid var(--league-border);min-height:150px;box-shadow:0 7px 24px rgba(21,148,71,.08);}
+.league-hero::before{content:"";position:absolute;inset:0 auto 0 0;width:9px;background:var(--league-primary);}
+.league-hero-copy{padding-left:8px}.league-hero .eyebrow{color:var(--league-primary)}.league-hero h1{color:var(--league-primary-dark)}.league-hero p{color:var(--league-muted)}
+.league-hero-logo-wrap{display:flex;align-items:center;justify-content:center;min-width:190px;min-height:190px;padding:6px 18px 6px 10px}
+.league-hero-logo{width:176px;height:176px;object-fit:cover;object-position:center;border:1px solid rgba(13,107,50,.10);border-radius:50%;background:#fff;display:block;mix-blend-mode:normal;box-shadow:0 5px 18px rgba(13,107,50,.10)}
+.league-hero .hero-ball{font-size:72px;color:var(--league-primary)}
+@media(max-width:650px){.league-hero-logo-wrap{min-width:132px;min-height:132px;padding:4px 8px}.league-hero-logo{width:122px;height:122px}.league-hero .hero-ball{font-size:55px}}
+
+/* A-20 - avvio sessione */
+.session-boot{min-height:calc(100vh - 82px);display:none;align-items:center;justify-content:center;padding:24px 16px;background:linear-gradient(145deg,#f8fffb 0%,#eef9f2 48%,#ffffff 100%)}.session-boot.active{display:flex}.session-boot-card{width:min(460px,94vw);background:rgba(255,255,255,.94);border:1px solid #cfe7d6;border-radius:24px;padding:34px 26px 30px;text-align:center;box-shadow:0 18px 50px rgba(13,107,50,.12);backdrop-filter:blur(4px)}.session-boot-brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px;color:#0d6b32;font-weight:900;font-size:14px;letter-spacing:.08em;text-transform:uppercase}.session-boot-logo{display:block;width:min(320px,84%);height:auto;max-height:86px;margin:0 auto 20px;object-fit:contain}.session-boot-title{margin:0;color:#0d6b32;font-size:22px;font-weight:900}.session-boot-subtitle{margin:7px 0 20px;color:#64748b;font-size:14px}.session-spinner{width:36px;height:36px;margin:0 auto 14px;border:4px solid #dcefe2;border-top-color:#159447;border-right-color:#0d6b32;border-radius:50%;animation:sessionSpin .8s linear infinite}.session-boot-progress{width:min(250px,70%);height:5px;margin:0 auto;background:#e7f3eb;border-radius:999px;overflow:hidden}.session-boot-progress::after{content:"";display:block;width:42%;height:100%;background:linear-gradient(90deg,#159447,#0d6b32);border-radius:999px;animation:sessionProgress 1.25s ease-in-out infinite}.session-boot-card p{margin:0}@keyframes sessionSpin{to{transform:rotate(360deg)}}@keyframes sessionProgress{0%{transform:translateX(-140%)}50%{transform:translateX(90%)}100%{transform:translateX(240%)}}@media(max-width:650px){.session-boot{min-height:calc(100vh - 70px);padding:18px 12px}.session-boot-card{padding:28px 18px 24px;border-radius:20px}.session-boot-logo{max-height:70px}}
+
+/* A-23 - chiusura anticipata votazioni */
+.danger-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #fecaca;background:#fff1f2;color:#991b1b;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.danger-btn:hover{background:#ffe4e6}.danger-btn:disabled{opacity:.6;cursor:not-allowed}
+
+/* A-25: elenco compatto partite disputate */
+.played-match-accordion{border:1px solid #e5e7eb;border-radius:14px;background:#fff;margin:10px 0;overflow:hidden;transition:.15s}.played-match-accordion:hover{box-shadow:0 8px 20px rgba(17,24,39,.06)}.played-match-summary{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;border:0;background:#fff;padding:17px 20px;text-align:left;cursor:pointer;font:inherit;color:#111827}.played-match-summary-text{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}.played-match-summary-text b{font-weight:900}.played-match-dot{color:#94a3b8}.played-match-chevron{flex:0 0 auto;font-size:22px;color:#64748b;transition:transform .15s ease}.played-match-accordion.is-open .played-match-chevron{transform:rotate(180deg)}.played-match-accordion.is-open{box-shadow:0 8px 24px rgba(17,24,39,.08)}.played-match-accordion .played-match-body{padding:0 20px 20px;margin:0}.played-match-accordion .played-score{margin-top:4px}@media(max-width:760px){.played-match-summary{padding:15px 16px}.played-match-summary-text{display:block;line-height:1.45}.played-match-dot{display:inline-block;margin:0 3px}}
+
+/* ============================================================ A-31.1 GRAPHIC FIX ============================================================ */
+
+/* Home league hero: target the real class used by the app */
+.league-hero{border-radius:22px;padding:28px 30px;box-shadow:0 12px 30px rgba(17,24,39,.08);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.league-hero:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(17,24,39,.11);border-color:var(--league-primary)}
+.league-hero::after{content:"";position:absolute;right:-55px;top:-75px;width:180px;height:180px;border-radius:50%;background:var(--league-primary-soft);opacity:.9;pointer-events:none}
+.league-hero h1{font-size:38px;letter-spacing:-.025em}
+.league-hero-copy{position:relative;z-index:1}
+.league-hero-logo-wrap{position:relative;z-index:1}
+
+/* Real dashboard action cards */
+#dashboard .action{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;background:#fff}
+#dashboard .action:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(17,24,39,.10);border-color:var(--league-primary)}
+#dashboard .action span{font-size:31px;margin-bottom:12px;transition:transform .18s ease}
+#dashboard .action:hover span{transform:scale(1.08)}
+#dashboard .action b{font-size:17px}
+#dashboard .action small{font-size:13px}
+
+/* Real next-match card */
+#dashboardMatchCard{border-radius:22px;box-shadow:0 10px 30px rgba(17,24,39,.08);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;background:#fff}
+#dashboardMatchCard:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(17,24,39,.12);border-color:var(--league-primary)}
+#dashboardMatchCard.is-clickable{cursor:pointer}
+#dashboardMatchCard #matchTitle{letter-spacing:-.015em}
+
+/* More visible progress bar */
+#dashboardMatchCard .progress{height:10px;border-radius:999px;margin:20px 0 10px;background:#e8eaed}
+#dashboardMatchCard .progress span{background:linear-gradient(90deg,var(--league-primary),var(--league-primary-dark));transition:width .3s ease}
+
+/* Touch target cleanup */
+#dashboard button,#dashboard .action{-webkit-tap-highlight-color:transparent}
+
+/* Mobile */
+@media(max-width:650px){.league-hero{border-radius:18px;padding:20px 22px}.league-hero h1{font-size:30px}.league-hero-logo-wrap{min-width:125px;min-height:125px}.league-hero-logo{width:112px;height:112px}#dashboard .action span{font-size:29px}#dashboardMatchCard{border-radius:18px}}
+
+/* ============================================================
+   A-32 · HOME REDESIGN
+   Solo grafica/UX: nessuna modifica alla logica applicativa.
+   ============================================================ */
+
+/* Layout generale della Home */
+#dashboard{max-width:1040px;margin:0 auto}
+#dashboard > .card{margin-bottom:18px}
+
+/* Header superiore più leggero e istituzionale */
+.topbar{
+  position:relative;
+  background:#ffffff;
+  color:#111827;
+  border-bottom:1px solid #e5e7eb;
+  box-shadow:0 2px 12px rgba(17,24,39,.05);
+}
+.topbar::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-1px;
+  height:3px;
+  background:linear-gradient(90deg,var(--league-primary,#159447),var(--league-primary-dark,#0d6b32));
+  opacity:.95;
+}
+.topbar .ghost{
+  border-color:#d1d5db;
+  border-radius:12px;
+  padding:9px 14px;
+  font-weight:800;
+  box-shadow:0 2px 8px rgba(17,24,39,.04);
+}
+.topbar .ghost:hover{
+  background:var(--league-primary-soft,#effaf3);
+  border-color:var(--league-border,#cfe7d6);
+}
+
+/* Hero della lega: testata, non semplice card */
+#dashboard .league-hero{
+  min-height:178px;
+  padding:30px 32px 28px;
+  border-radius:24px;
+  border:1px solid var(--league-border,#cfe7d6);
+  background:
+    radial-gradient(circle at 96% 8%, rgba(21,148,71,.10) 0 76px, transparent 77px),
+    linear-gradient(135deg,#ffffff 0%,#fbfefc 54%,var(--league-primary-soft,#effaf3) 100%);
+  box-shadow:0 12px 32px rgba(13,107,50,.09);
+}
+#dashboard .league-hero::before{width:10px}
+#dashboard .league-hero::after{
+  right:-45px;
+  top:-65px;
+  width:155px;height:155px;
+  background:var(--league-primary-soft,#effaf3);
+  opacity:.78;
+}
+#dashboard .league-hero-copy{padding-left:10px;max-width:72%;}
+#dashboard .league-hero .eyebrow{font-size:11px;letter-spacing:.18em;}
+#dashboard .league-hero h1{
+  margin:7px 0 8px;
+  font-size:clamp(30px,4vw,40px);
+  line-height:1.02;
+  letter-spacing:-.035em;
+}
+#dashboard .league-hero p{font-size:14px;font-weight:700;letter-spacing:.02em}
+#dashboard .league-hero-logo-wrap{min-width:172px;min-height:172px;padding:2px 8px 2px 18px}
+#dashboard .league-hero-logo{width:156px;height:156px;border-radius:50%;}
+
+/* Menu principale: card più compatte e con gerarchia visiva */
+#dashboard .grid.two{
+  gap:14px;
+  margin:0 0 18px;
+}
+#dashboard .action{
+  position:relative;
+  min-height:136px;
+  padding:19px 20px 18px;
+  border-radius:18px;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  box-shadow:0 7px 22px rgba(17,24,39,.055);
+  overflow:hidden;
+}
+#dashboard .action::after{
+  content:"";
+  position:absolute;
+  right:-24px;bottom:-30px;
+  width:90px;height:90px;
+  border-radius:50%;
+  background:var(--league-primary-soft,#effaf3);
+  opacity:.6;
+  pointer-events:none;
+  transition:transform .2s ease,opacity .2s ease;
+}
+#dashboard .action span{
+  position:relative;
+  z-index:1;
+  width:44px;height:44px;
+  display:flex;
+  align-items:center;justify-content:center;
+  margin:0 0 15px;
+  border-radius:14px;
+  background:var(--league-primary-soft,#effaf3);
+  color:var(--league-primary-dark,#0d6b32);
+  font-size:24px;
+  line-height:1;
+  transition:transform .18s ease,background .18s ease;
+}
+#dashboard .action b,
+#dashboard .action small{position:relative;z-index:1}
+#dashboard .action b{
+  font-size:16px;
+  letter-spacing:-.01em;
+}
+#dashboard .action small{
+  margin-top:4px;
+  font-size:12px;
+  line-height:1.35;
+}
+#dashboard .action:hover{
+  transform:translateY(-3px);
+  border-color:var(--league-border,#cfe7d6);
+  box-shadow:0 14px 30px rgba(13,107,50,.10);
+}
+#dashboard .action:hover::after{transform:scale(1.2);opacity:.88}
+#dashboard .action:hover span{transform:translateY(-1px) scale(1.04);background:#e2f5e8}
+
+/* Strumenti amministrativi: più discreti rispetto alle funzioni principali */
+#dashboard .action:nth-child(5),
+#dashboard .action:nth-child(6){
+  min-height:112px;
+  background:linear-gradient(180deg,#ffffff 0%,#fbfcfb 100%);
+  border-style:dashed;
+  box-shadow:0 4px 16px rgba(17,24,39,.04);
+}
+#dashboard .action:nth-child(5) span,
+#dashboard .action:nth-child(6) span{
+  width:38px;height:38px;
+  margin-bottom:11px;
+  font-size:20px;
+  background:#f4f8f5;
+}
+
+/* Match card: protagonista della Home */
+#dashboardMatchCard{
+  position:relative;
+  overflow:hidden;
+  padding:22px 24px 20px;
+  min-height:190px;
+  border-radius:24px;
+  border:1px solid var(--league-border,#cfe7d6);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(21,148,71,.07) 0 90px, transparent 91px),
+    #ffffff;
+  box-shadow:0 12px 34px rgba(13,107,50,.09);
+}
+#dashboardMatchCard::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:8px;
+  background:linear-gradient(180deg,var(--league-primary,#159447),var(--league-primary-dark,#0d6b32));
+}
+#dashboardMatchCard::after{
+  content:"MATCH";
+  position:absolute;
+  top:18px;right:22px;
+  font-size:9px;font-weight:900;letter-spacing:.18em;
+  color:#94a3b8;
+  opacity:.85;
+}
+#dashboardMatchCard > div:first-child{
+  position:relative;
+  z-index:1;
+  align-items:flex-start;
+  padding-left:2px;
+}
+#dashboardMatchCard #matchEyebrow{
+  color:var(--league-primary-dark,#0d6b32);
+  font-size:10px;
+  letter-spacing:.16em;
+}
+#dashboardMatchCard #matchTitle{
+  margin:8px 0 0;
+  font-size:clamp(22px,3vw,30px);
+  line-height:1.12;
+  letter-spacing:-.025em;
+  color:#111827;
+  max-width:760px;
+}
+#dashboardMatchCard #voteState{margin-top:1px}
+#dashboardMatchCard .progress{margin:22px 0 9px;height:9px;background:#edf1ee}
+#dashboardMatchCard #voteCount{color:#64748b;font-weight:700}
+#dashboardMatchCard .match-countdown{
+  margin:9px 0 2px;
+  color:var(--league-primary-dark,#0d6b32);
+  font-size:18px;
+  letter-spacing:.015em;
+}
+#dashboardMatchCard.is-clickable:hover{
+  transform:translateY(-3px);
+  border-color:var(--league-primary);
+  box-shadow:0 18px 40px rgba(13,107,50,.13);
+}
+#dashboardMatchCard.is-clickable:focus-visible{
+  outline:3px solid rgba(21,148,71,.18);
+  outline-offset:3px;
+}
+
+/* Stati più leggibili senza toccare la logica */
+#dashboardMatchCard .pill.open{
+  background:#e7f7ed;
+  color:var(--league-primary-dark,#0d6b32);
+  border:1px solid #cbe8d4;
+}
+
+/* Mobile: gerarchia verticale, senza ridurre la leggibilità */
+@media(max-width:650px){
+  main{padding-left:12px;padding-right:12px}
+  #dashboard .league-hero{
+    min-height:156px;
+    padding:22px 20px;
+    border-radius:20px;
+  }
+  #dashboard .league-hero-copy{max-width:67%;padding-left:7px}
+  #dashboard .league-hero h1{font-size:29px}
+  #dashboard .league-hero-logo-wrap{min-width:124px;min-height:124px;padding:4px 2px 4px 8px}
+  #dashboard .league-hero-logo{width:116px;height:116px;border-radius:50%;}
+  #dashboard .grid.two{gap:11px}
+  #dashboard .action{min-height:126px;padding:16px 16px 15px;border-radius:16px}
+  #dashboard .action span{width:40px;height:40px;font-size:22px;margin-bottom:12px}
+  #dashboard .action b{font-size:15px}
+  #dashboard .action small{font-size:11px}
+  #dashboard .action:nth-child(5),
+  #dashboard .action:nth-child(6){min-height:102px}
+  #dashboardMatchCard{min-height:172px;padding:19px 18px 18px;border-radius:20px}
+  #dashboardMatchCard::after{right:16px;top:15px}
+  #dashboardMatchCard #matchTitle{font-size:22px;max-width:100%;padding-right:18px}
+  #dashboardMatchCard .progress{margin-top:18px}
+}
+
+/* Schermi molto stretti: la match card non deve comprimersi */
+@media(max-width:430px){
+  #dashboard .grid.two{grid-template-columns:1fr 1fr}
+  #dashboard .action{min-height:120px}
+  #dashboard .league-hero-copy{max-width:61%}
+  #dashboard .league-hero-logo-wrap{min-width:112px}
+  #dashboard .league-hero-logo{width:104px;height:104px;border-radius:50%;}
+  #dashboardMatchCard > div:first-child{gap:10px}
+  #dashboardMatchCard #matchTitle{font-size:20px}
+}
+
+/* ============================================================
+   A-33.3 · CALENDARIO — MENU AZIONI
+   Correzione isolata del layout dei comandi.
+   Solo CSS: nessuna modifica alla logica applicativa.
+   ============================================================ */
+
+.calendar-row{
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:
+    "info status"
+    "actions actions";
+  column-gap:24px;
+  row-gap:10px;
+  padding:18px;
+  min-height:108px;
+}
+
+.calendar-row > div:first-child{
+  grid-area:info;
+  min-width:0;
+  align-content:center;
+  grid-template-columns:44px minmax(0,1fr);
+  column-gap:14px;
+}
+
+.calendar-row > .pill{
+  grid-area:status;
+  justify-self:end;
+  align-self:end;
+  white-space:nowrap;
+  padding:7px 11px;
+}
+
+/* Specificità maggiore del generico .calendar-row > div */
+.calendar-row > .calendar-actions{
+  grid-area:actions;
+  display:flex;
+  width:100%;
+  justify-content:flex-end;
+  align-items:center;
+  gap:8px;
+  flex-wrap:nowrap;
+  min-width:0;
+  grid-template-columns:none;
+}
+
+.calendar-row > .calendar-actions .small-btn{
+  flex:0 0 auto;
+  min-height:42px;
+  padding:9px 13px;
+  border-radius:11px;
+  box-sizing:border-box;
+  white-space:nowrap;
+}
+
+.calendar-row > .calendar-actions .small-btn:hover{
+  background:#f8fafc;
+  border-color:#94a3b8;
+  transform:translateY(-1px);
+  box-shadow:0 4px 10px rgba(17,24,39,.06);
+}
+
+.calendar-row > .calendar-actions .small-btn.danger{
+  background:#fff;
+  color:#b91c1c;
+  border-color:#fecaca;
+}
+
+.calendar-row > .calendar-actions .small-btn.danger:hover{
+  background:#fef2f2;
+  border-color:#fca5a5;
+}
+
+@media(max-width:650px){
+  .calendar-row{
+    grid-template-columns:1fr;
+    grid-template-areas:
+      "info"
+      "status"
+      "actions";
+  }
+
+  .calendar-row > .pill{
+    justify-self:start;
+    align-self:auto;
+  }
+
+  .calendar-row > .calendar-actions{
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .calendar-row > .calendar-actions .small-btn{
+    min-height:40px;
+  }
+}
+
+
+
+/* ============================================================
+   A-33.4 · CALENDARIO — TOOLBAR + STATI
+   Grafica/UX. Logica invariata.
+   ============================================================ */
+
+/* Blocco superiore del Calendario */
+#calendar .calendar-toolbar{
+  align-items:center;
+  gap:20px;
+}
+
+#calendar .calendar-toolbar > div{
+  min-width:0;
+}
+
+#calendar .calendar-toolbar h3{
+  margin:0;
+}
+
+#calendar .calendar-toolbar p{
+  margin:7px 0 0;
+  max-width:900px;
+  line-height:1.45;
+}
+
+#calendar #newMatchBtn{
+  flex:0 0 auto;
+  min-width:150px;
+  padding:12px 18px;
+  border-radius:14px;
+  line-height:1.2;
+}
+
+#calendar .import-box{
+  margin-top:20px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:#fbfcfd;
+}
+
+#calendar .import-box .file-btn{
+  padding:11px 16px;
+  border-radius:11px;
+  white-space:nowrap;
+}
+
+#calendar .import-box > .muted{
+  line-height:1.4;
+}
+
+/* Badge stato partite: semantica cromatica immediata */
+#calendarList .calendar-row .pill.status-finished{
+  background:#fee2e2;
+  color:#b91c1c;
+  border:1px solid #fecaca;
+}
+
+#calendarList .calendar-row .pill.status-scheduled{
+  background:#fef3c7;
+  color:#a16207;
+  border:1px solid #fde68a;
+}
+
+#calendarList .calendar-row .pill.status-in-progress{
+  background:#dcfce7;
+  color:#15803d;
+  border:1px solid #bbf7d0;
+}
+
+#calendarList .calendar-row .pill.open{
+  background:#dcfce7;
+  color:#15803d;
+  border:1px solid #bbf7d0;
+}
+
+@media(max-width:650px){
+  #calendar .calendar-toolbar{
+    align-items:stretch;
+    gap:14px;
+  }
+
+  #calendar #newMatchBtn{
+    width:100%;
+  }
+
+  #calendar .import-box{
+    align-items:stretch;
+    flex-direction:column;
+  }
+
+  #calendar .import-box .file-btn{
+    width:100%;
+    box-sizing:border-box;
+    text-align:center;
+  }
+}
+
+/* A-33.5 - Classifiche: podio + lista compatta, solo grafica */
+#ranking .card{
+  padding:24px 26px;
+}
+
+#ranking .tabs{
+  gap:8px;
+}
+
+#ranking .tab{
+  min-width:120px;
+  font-weight:700;
+  transition:transform .15s ease,box-shadow .15s ease,background-color .15s ease,border-color .15s ease;
+}
+
+#ranking .tab:hover:not(.active){
+  transform:translateY(-1px);
+  border-color:#94a3b8;
+  box-shadow:0 5px 12px rgba(17,24,39,.06);
+}
+
+#ranking .tab.active{
+  box-shadow:0 5px 14px rgba(17,24,39,.12);
+}
+
+.ranking-caption{
+  color:#64748b;
+  font-size:.82rem;
+  font-weight:800;
+  letter-spacing:.02em;
+  margin:2px 0 18px;
+}
+
+.ranking-podium{
+  display:grid;
+  grid-template-columns:1fr 1.12fr 1fr;
+  align-items:end;
+  gap:12px;
+  margin:2px 0 26px;
+}
+
+.ranking-podium-item{
+  position:relative;
+  min-height:172px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  text-align:center;
+  padding:18px 12px 16px;
+  border:1px solid #e5e7eb;
+  border-radius:18px;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  box-shadow:0 5px 16px rgba(17,24,39,.045);
+}
+
+.ranking-podium-item.podium-1{
+  min-height:196px;
+  border-color:#d7dee8;
+  background:linear-gradient(180deg,#ffffff 0%,#f3f6fa 100%);
+  box-shadow:0 10px 24px rgba(17,24,39,.09);
+}
+
+.ranking-medal{
+  position:absolute;
+  top:-18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  box-shadow:0 6px 16px rgba(17,24,39,.10);
+  font-size:25px;
+}
+
+.ranking-podium-name{
+  width:100%;
+  font-size:1rem;
+  font-weight:900;
+  line-height:1.2;
+  margin-top:17px;
+  overflow-wrap:anywhere;
+}
+
+.podium-1 .ranking-podium-name{
+  font-size:1.08rem;
+}
+
+.ranking-podium-points{
+  margin-top:7px;
+  font-size:1.65rem;
+  line-height:1;
+  font-weight:950;
+  color:#111827;
+}
+
+.podium-1 .ranking-podium-points{
+  font-size:1.85rem;
+}
+
+.ranking-podium-points span,
+.ranking-list-points small{
+  font-size:.72em;
+  font-weight:800;
+  color:#64748b;
+}
+
+.ranking-vote-breakdown{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:9px;
+  color:#64748b;
+  font-size:.72rem;
+  font-weight:700;
+}
+
+.ranking-vote-breakdown span{
+  white-space:nowrap;
+}
+
+.ranking-list{
+  border-top:1px solid #e5e7eb;
+}
+
+.ranking-list-row{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) auto;
+  align-items:center;
+  gap:12px;
+  padding:14px 4px;
+  border-bottom:1px solid #edf0f2;
+}
+
+.ranking-list-row:last-child{
+  border-bottom:0;
+}
+
+.ranking-position{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  background:#f8fafc;
+  color:#475569;
+  font-weight:900;
+  font-size:.88rem;
+}
+
+.ranking-player-info{
+  min-width:0;
+}
+
+.ranking-player-info b{
+  display:block;
+  font-size:1rem;
+  line-height:1.2;
+}
+
+.ranking-player-info .ranking-vote-breakdown{
+  justify-content:flex-start;
+  margin-top:4px;
+}
+
+.ranking-list-points{
+  min-width:64px;
+  text-align:right;
+  font-size:1.1rem;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+@media(max-width:650px){
+  #ranking .card{
+    padding:20px 16px;
+  }
+
+  #ranking .tabs .tab{
+    flex:1;
+    min-width:0;
+  }
+
+  .ranking-podium{
+    grid-template-columns:1fr 1.08fr 1fr;
+    gap:7px;
+    margin-bottom:22px;
+  }
+
+  .ranking-podium-item{
+    min-height:150px;
+    padding:15px 7px 13px;
+    border-radius:15px;
+  }
+
+  .ranking-podium-item.podium-1{
+    min-height:174px;
+  }
+
+  .ranking-medal{
+    width:40px;
+    height:40px;
+    top:-15px;
+    font-size:21px;
+  }
+
+  .ranking-podium-name,
+  .podium-1 .ranking-podium-name{
+    font-size:.84rem;
+  }
+
+  .ranking-podium-points,
+  .podium-1 .ranking-podium-points{
+    font-size:1.35rem;
+  }
+
+  .ranking-vote-breakdown{
+    gap:4px;
+    font-size:.64rem;
+  }
+
+  .ranking-list-row{
+    grid-template-columns:36px minmax(0,1fr) auto;
+    gap:9px;
+    padding:13px 2px;
+  }
+
+  .ranking-position{
+    width:30px;
+    height:30px;
+  }
+
+  .ranking-player-info b{
+    font-size:.92rem;
+  }
+
+  .ranking-list-points{
+    min-width:54px;
+    font-size:1rem;
+  }
+}
+
+
+/* A-33.6 - Giocatori: identita' neutra + statistiche responsive */
+#players .card{
+  padding:24px 26px;
+}
+
+#players .rank{
+  grid-template-columns:48px minmax(0,1fr);
+  gap:12px;
+  padding:15px 4px;
+  min-height:58px;
+}
+
+#players .rank .pos{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border:1px solid #e2e8f0;
+  border-radius:50%;
+  background:#f8fafc;
+  color:#0f172a;
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+
+#players .rank b{
+  font-size:1rem;
+  line-height:1.2;
+}
+
+#players .rank .sub{
+  margin-top:4px;
+  font-size:.78rem;
+}
+
+#players .rank .sub.roster-status{
+  display:inline-flex;
+  width:max-content;
+  margin-top:5px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#f1f5f9;
+  color:#64748b;
+  font-size:.7rem;
+  font-weight:700;
+}
+
+#players .rank .sub.roster-status.in-lineup{
+  background:#ecfdf5;
+  color:#047857;
+}
+
+#players #seasonStatsTable .card{
+  padding:0;
+  border:0;
+  box-shadow:none;
+  background:transparent;
+}
+
+#players #seasonStatsTable .stats-season{
+  margin-top:18px;
+}
+
+/* A-33.6.1: la visualizzazione delle statistiche e' uniforme su PC e smartphone. */
+#players #seasonStatsTable .stats-header{
+  display:none;
+}
+
+#players #seasonStatsTable .stats-row{
+  min-width:0;
+  display:grid;
+  grid-template-columns:minmax(220px,1.8fr) repeat(6,minmax(72px,1fr));
+  gap:10px;
+  align-items:center;
+  padding:13px 0;
+  border-top:1px solid #e5e7eb;
+}
+
+#players #seasonStatsTable .stats-season .stats-row > div{
+  min-width:0;
+  padding-right:8px;
+}
+
+#players #seasonStatsTable .stats-season .stats-row > div b{
+  font-size:.95rem;
+}
+
+#players #seasonStatsTable .stats-season .stats-row > span{
+  min-width:0;
+  padding:9px 6px 8px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  background:#f8fafc;
+  text-align:center;
+  font-size:.88rem;
+  font-weight:800;
+}
+
+#players #seasonStatsTable .stats-season .stats-row > span::before{
+  display:block;
+  margin-bottom:2px;
+  color:#64748b;
+  font-size:.58rem;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+#players #seasonStatsTable .stats-season .stats-row > span:nth-child(2)::before{content:'Pres.';}
+#players #seasonStatsTable .stats-season .stats-row > span:nth-child(3)::before{content:'Gol';}
+#players #seasonStatsTable .stats-season .stats-row > span:nth-child(4)::before{content:'Assist';}
+#players #seasonStatsTable .stats-season .stats-row > span:nth-child(5)::before{content:'Verdi';}
+#players #seasonStatsTable .stats-season .stats-row > span:nth-child(6)::before{content:'Gialli';}
+#players #seasonStatsTable .stats-season .stats-row > span:nth-child(7)::before{content:'Rossi';}
+
+@media(max-width:760px){
+  #players .card{
+    padding:20px 16px;
+  }
+
+  #players .rank{
+    grid-template-columns:42px minmax(0,1fr);
+    gap:10px;
+    padding:13px 2px;
+  }
+
+  #players .rank .pos{
+    width:36px;
+    height:36px;
+  }
+
+  #players #seasonStatsTable .stats-season{
+    overflow:visible;
+    margin-top:14px;
+  }
+
+  #players #seasonStatsTable .stats-season .stats-row{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:6px;
+    padding:12px 0;
+  }
+
+  #players #seasonStatsTable .stats-season .stats-row > div{
+    grid-column:1 / -1;
+    padding-bottom:3px;
+  }
+}
+
+@media(max-width:380px){
+  #players #seasonStatsTable .stats-season .stats-row{
+    gap:4px;
+  }
+
+  #players #seasonStatsTable .stats-season .stats-row > span{
+    padding-left:1px;
+    padding-right:1px;
+    font-size:.82rem;
+  }
+
+  #players #seasonStatsTable .stats-season .stats-row > span::before{
+    font-size:.52rem;
+  }
+}
+
+
+/* A-33.7 - Partite disputate: linguaggio grafico uniforme e responsive.
+   Solo presentazione: nessuna modifica a dati o logica. */
+#played .card{
+  border-radius:22px;
+}
+
+#played #playedMatchesList{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+#played #playedMatchesList > .card:first-child{
+  margin-bottom:2px;
+  padding:22px 26px;
+}
+
+#played .played-match-accordion{
+  overflow:hidden;
+  border:1px solid #e2e8f0;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 6px 22px rgba(15,23,42,.05);
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+#played .played-match-accordion:hover{
+  border-color:#cbd5e1;
+  box-shadow:0 10px 28px rgba(15,23,42,.08);
+}
+
+#played .played-match-summary{
+  width:100%;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:20px 24px;
+  border:0;
+  background:#fff;
+  color:#0f172a;
+  text-align:left;
+  cursor:pointer;
+}
+
+#played .played-match-summary-text{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:7px;
+  line-height:1.35;
+}
+
+#played .played-match-summary-text b{
+  font-weight:900;
+}
+
+#played .played-match-dot{
+  color:#94a3b8;
+}
+
+#played .played-match-chevron{
+  flex:0 0 auto;
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#f1f5f9;
+  color:#64748b;
+  font-size:18px;
+  transition:transform .18s ease, background .18s ease;
+}
+
+#played .played-match-accordion.is-open .played-match-chevron{
+  transform:rotate(180deg);
+  background:#ecfdf5;
+  color:#047857;
+}
+
+#played .played-match-body{
+  margin:0;
+  padding:0 24px 24px;
+}
+
+#played .played-score{
+  margin:0;
+  padding:20px 18px;
+  border-radius:16px;
+  background:#f8fafc;
+  font-size:clamp(1rem,2vw,1.35rem);
+  line-height:1.3;
+  text-align:center;
+}
+
+#played .played-score b{
+  display:inline-block;
+  margin:0 12px;
+  font-size:clamp(1.8rem,4vw,2.35rem);
+  font-weight:950;
+}
+
+#played .scorer-line{
+  margin-top:10px;
+  padding:13px 16px;
+  border-radius:14px;
+  background:#f8fafc;
+  color:#475569;
+  line-height:1.45;
+}
+
+#played .scorer-line b{
+  color:#0f172a;
+}
+
+#played .mvp-box{
+  margin-top:10px;
+  padding:15px 16px;
+  border:1px solid #bbf7d0;
+  border-radius:14px;
+  background:#ecfdf5;
+  color:#166534;
+}
+
+#played .played-stats{
+  margin-top:14px;
+  overflow:visible;
+}
+
+#played .played-player-row{
+  display:grid;
+  grid-template-columns:minmax(190px,1.7fr) repeat(5,minmax(62px,82px));
+  gap:9px;
+  align-items:center;
+  min-width:0;
+  padding:11px 0;
+  border-top:1px solid #e5e7eb;
+}
+
+#played .played-player-row > b{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+#played .played-player-row > span{
+  min-width:0;
+  padding:8px 5px;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  background:#f8fafc;
+  text-align:center;
+  font-weight:800;
+  font-size:.88rem;
+}
+
+#played .played-header{
+  padding:0 0 7px;
+  border-top:0;
+}
+
+#played .played-header > span{
+  padding:0 5px;
+  border:0;
+  background:transparent;
+  color:#64748b;
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+@media(max-width:760px){
+  #played #playedMatchesList > .card:first-child{
+    padding:18px 16px;
+  }
+
+  #played .played-match-summary{
+    padding:17px 16px;
+    gap:10px;
+  }
+
+  #played .played-match-summary-text{
+    gap:5px;
+    font-size:.9rem;
+  }
+
+  #played .played-match-summary-text span:last-of-type{
+    flex-basis:100%;
+  }
+
+  #played .played-match-body{
+    padding:0 14px 16px;
+  }
+
+  #played .played-score{
+    padding:17px 10px;
+  }
+
+  #played .played-score b{
+    margin:0 7px;
+    font-size:1.85rem;
+  }
+
+  #played .scorer-line,
+  #played .mvp-box{
+    font-size:.88rem;
+  }
+
+  #played .played-header{
+    display:none;
+  }
+
+  #played .played-player-row{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    padding:13px 0;
+  }
+
+  #played .played-player-row > b{
+    grid-column:1 / -1;
+    padding:0 2px 3px;
+    font-size:.92rem;
+    white-space:normal;
+  }
+
+  #played .played-player-row > span{
+    position:relative;
+    padding:8px 4px 7px;
+    font-size:.86rem;
+  }
+
+  #played .played-player-row > span::before{
+    display:block;
+    margin-bottom:2px;
+    color:#64748b;
+    font-size:.56rem;
+    font-weight:900;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  #played .played-player-row > span:nth-child(2)::before{content:'Gol';}
+  #played .played-player-row > span:nth-child(3)::before{content:'Assist';}
+  #played .played-player-row > span:nth-child(4)::before{content:'Gialli';}
+  #played .played-player-row > span:nth-child(5)::before{content:'Rossi';}
+  #played .played-player-row > span:nth-child(6)::before{content:'Voto';}
+}
+
+@media(max-width:380px){
+  #played .played-match-summary-text{
+    font-size:.84rem;
+  }
+
+  #played .played-score{
+    font-size:.92rem;
+  }
+
+  #played .played-score b{
+    font-size:1.6rem;
+  }
+}
+
+
+/* A-33.8 - Amministrazione: linguaggio grafico uniforme, solo presentazione. */
+#admin .card{
+  padding:24px 26px;
+  border-radius:20px;
+}
+#admin .card h3{
+  margin:0 0 14px;
+  font-size:19px;
+}
+#admin .card > .muted{
+  margin:0 0 16px;
+  line-height:1.55;
+}
+#admin .rule{
+  min-height:46px;
+  align-items:center;
+  padding:10px 2px;
+  border-bottom:1px solid #edf0f3;
+}
+#admin .rule b{
+  font-size:.94rem;
+}
+#admin .rule span{
+  color:#475569;
+  font-size:.9rem;
+  text-align:right;
+}
+#admin #recalculateResultsBtn{
+  margin-top:2px;
+}
+#admin .form-grid{
+  gap:14px 18px;
+  align-items:end;
+  margin-top:6px;
+}
+#admin .form-grid label{
+  margin:0;
+}
+#admin .form-grid input{
+  width:100%;
+  margin-top:7px;
+  padding:11px 12px;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  background:#fff;
+  color:#111827;
+  font:inherit;
+  outline:none;
+}
+#admin .form-grid input:focus{
+  border-color:#94a3b8;
+  box-shadow:0 0 0 3px rgba(148,163,184,.18);
+}
+#admin .form-grid .modal-actions{
+  margin-top:0;
+  align-self:end;
+}
+#admin .pending-user,
+#admin .admin-user-row{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:14px 2px;
+  border-bottom:1px solid #edf0f3;
+}
+#admin .admin-user-row:last-child{
+  border-bottom:0;
+}
+#admin .admin-avatar{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border:1px solid #dbe3ea;
+  border-radius:50%;
+  background:#f8fafc;
+  color:#0f172a;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+#admin .admin-user-main{
+  min-width:0;
+}
+#admin .admin-user-main b{
+  display:block;
+  font-size:.96rem;
+  line-height:1.25;
+}
+#admin .admin-account{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:4px;
+}
+#admin .admin-status{
+  font-size:.72rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+#admin .admin-status.associated{
+  color:#15803d;
+}
+#admin .admin-status.pending{
+  color:#c2410c;
+}
+#admin .admin-email{
+  color:#64748b;
+  font-size:.72rem;
+  word-break:break-word;
+}
+#admin .admin-user-action{
+  justify-self:end;
+}
+#admin .admin-user-action .small-btn{
+  white-space:nowrap;
+  padding:9px 11px;
+  font-size:.82rem;
+}
+#admin .small-action{
+  margin-left:0;
+  white-space:nowrap;
+}
+#admin .admin-section-note{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+#admin .admin-section-note::before{
+  content:'';
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#cbd5e1;
+  flex:0 0 auto;
+}
+
+@media(max-width:650px){
+  #admin .card{
+    padding:20px 16px;
+    border-radius:18px;
+  }
+  #admin .rule{
+    min-height:0;
+    gap:12px;
+  }
+  #admin .rule b{
+    flex:1 1 auto;
+  }
+  #admin .rule span{
+    flex:0 0 auto;
+    max-width:48%;
+  }
+  #admin .form-grid{
+    grid-template-columns:1fr;
+  }
+  #admin .form-grid .modal-actions{
+    grid-column:1 / -1 !important;
+    justify-content:stretch;
+  }
+  #admin .form-grid .modal-actions .primary{
+    width:100%;
+  }
+  #admin .pending-user,
+  #admin .admin-user-row{
+    grid-template-columns:38px minmax(0,1fr);
+    gap:10px;
+    padding:13px 0;
+  }
+  #admin .admin-avatar{
+    width:36px;
+    height:36px;
+  }
+  #admin .admin-user-action,
+  #admin .pending-user .small-action{
+    grid-column:2;
+    justify-self:start;
+    margin-top:2px;
+  }
+  #admin .pending-user .small-action{
+    width:100%;
+  }
+  #admin .admin-user-action .small-btn{
+    width:100%;
+  }
+  #admin .admin-email{
+    display:block;
+    width:100%;
+  }
+}
+
+/* A-34.0 - Gestisci Partita: revisione grafica PC + smartphone, solo presentazione. */
+#match .card{padding:24px 26px;border-radius:20px}
+#match .section-head{margin-bottom:20px}
+#match .section-head h2{font-size:28px;letter-spacing:-.02em}
+#match .match-meta{font-size:.82rem;margin-bottom:16px}
+#match .match-meta span:first-child{font-weight:800;color:#0f172a}
+#match .card > h3{font-size:19px;margin-bottom:10px}
+#match .check-list{gap:9px;margin:20px 0}
+#match .check{
+  min-height:50px;box-sizing:border-box;padding:11px 14px;border-radius:14px;
+  background:#fff;border:1px solid #e2e8f0;transition:.15s ease;
+}
+#match .check:hover{border-color:#cbd5e1;background:#f8fafc}
+#match .check input{width:19px;height:19px;accent-color:#0f172a;flex:0 0 auto}
+#match .check span{font-weight:800}
+#match .check small{margin-left:auto}
+#match #lockBtn{margin-top:2px}
+#match #matchLockStatus{margin:12px 0 0;line-height:1.45}
+
+#matchStatsCard{margin-top:18px}
+#matchStatsCard > .muted{line-height:1.5}
+#matchResultEditor{padding:16px;border-radius:16px;border:1px solid #e2e8f0;background:#f8fafc;margin:18px 0 20px}
+#matchResultEditor .result-editor-title{font-size:.9rem;margin-bottom:14px}
+#matchResultEditor .result-inputs{gap:18px}
+#matchResultEditor .result-auto-score,
+#matchResultEditor .result-inputs label{min-height:74px;justify-content:center}
+#matchResultEditor .result-auto-score{padding:9px 12px;border-radius:13px;background:#fff;border:1px solid #e2e8f0}
+#matchResultEditor .result-inputs label{padding:9px 12px;border-radius:13px;background:#fff;border:1px solid #e2e8f0;box-sizing:border-box}
+#matchResultEditor .result-inputs label input{box-sizing:border-box;background:#fff}
+#matchResultEditor .result-inputs>span{padding-bottom:25px;color:#64748b}
+#matchStatsList .stats-header{padding:0 0 9px;border-bottom:1px solid #dfe5ea}
+#matchStatsList .stats-row{padding:13px 0;border-top:1px solid #edf0f3}
+#matchStatsList .stats-row:first-of-type{border-top:0}
+#matchStatsList .stats-row b{font-size:.95rem}
+#matchStatsList .stats-note{margin-top:3px}
+#matchStatsList .stats-row input[type=number]{border:1px solid #cbd5e1;border-radius:9px;background:#fff}
+#matchStatsCard .modal-actions{margin-top:18px;gap:8px;flex-wrap:wrap}
+#matchStatsCard .modal-actions button{border-radius:11px}
+
+@media(max-width:760px){
+  #match .card{padding:20px 15px;border-radius:18px}
+  #match .section-head h2{font-size:23px;line-height:1.15}
+  #match .match-meta{display:flex;justify-content:space-between;gap:12px}
+  #match .match-meta span:last-child{text-align:right}
+  #match .check{min-height:54px;padding:12px 12px}
+  #match .check-list{gap:8px;margin:18px 0}
+  #matchResultEditor{padding:12px;border-radius:15px}
+  #matchResultEditor .result-inputs{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:7px}
+  #matchResultEditor .result-auto-score,
+  #matchResultEditor .result-inputs label{min-height:78px;padding:8px 7px}
+  #matchResultEditor .result-team{font-size:.78rem;text-align:center;line-height:1.2}
+  #matchResultEditor .result-auto-score strong{font-size:28px}
+  #matchResultEditor .result-inputs>span{font-size:19px;padding-bottom:30px}
+  #matchStatsList .stats-grid{display:block}
+  #matchStatsList .stats-header{display:none}
+  #matchStatsList .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;border:1px solid #e2e8f0;border-radius:14px;background:#fff;padding:12px;margin:9px 0;min-width:0}
+  #matchStatsList .stats-row > div:first-child{grid-column:1 / -1;padding-bottom:3px}
+  #matchStatsList .stats-row label{justify-content:flex-start;border:1px solid #e5e7eb;border-radius:10px;padding:8px;background:#f8fafc}
+  #matchStatsList .stats-row input[type=number]{width:100%;box-sizing:border-box;padding:9px 7px}
+  #matchStatsList .stats-row > input{min-width:0}
+  #matchStatsList .stats-readonly{grid-template-columns:1fr 1fr}
+  #matchStatsList .stats-readonly > div:first-child{grid-column:1 / -1}
+  #matchStatsCard .modal-actions{display:grid;grid-template-columns:1fr;gap:8px}
+  #matchStatsCard .modal-actions button{width:100%}
+}
+
+
+/* A-34.1 - Tabellino: colonne allineate su PC e campi auto-descrittivi su mobile. */
+#matchStatsList .stats-grid,
+#matchStatsList .stats-row{
+  grid-template-columns:minmax(220px,1.8fr) repeat(5,minmax(70px,.65fr));
+}
+#matchStatsList .stats-field{
+  margin:0;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  font-weight:700;
+}
+#matchStatsList .stats-field > span{
+  display:none;
+  color:#64748b;
+  font-size:.66rem;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+#matchStatsList .stats-field input[type=number]{
+  width:72px;
+  text-align:center;
+}
+#matchStatsList .stats-field.inline-check{
+  flex-direction:row;
+  gap:7px;
+}
+#matchStatsList .stats-field.inline-check > span{display:none}
+
+@media(max-width:760px){
+  #matchStatsList .stats-row{
+    grid-template-columns:1fr 1fr;
+  }
+  #matchStatsList .stats-field{
+    align-items:stretch;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    padding:8px 9px;
+    background:#f8fafc;
+  }
+  #matchStatsList .stats-field > span{
+    display:block;
+  }
+  #matchStatsList .stats-field.inline-check{
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-start;
+  }
+  #matchStatsList .stats-field.inline-check > span{display:block}
+  #matchStatsList .stats-field input[type=number]{width:100%;}
+  #matchStatsList .stats-field input[type=checkbox]{margin:0;}
+}
+
+
+/* A-34.2 - Tabellino desktop: griglia esplicita a 6 colonne.
+   Evita che ROSSI finisca su una seconda riga e mantiene identiche
+   le colonne tra intestazione e dati. */
+@media(min-width:761px){
+  #matchStatsList .stats-grid.stats-header,
+  #matchStatsList .stats-row{
+    display:grid;
+    grid-template-columns:minmax(250px,1fr) repeat(5,minmax(78px,90px));
+    column-gap:14px;
+    align-items:center;
+    width:100%;
+    box-sizing:border-box;
+  }
+  #matchStatsList .stats-grid.stats-header{
+    grid-auto-flow:row;
+    overflow:visible;
+  }
+  #matchStatsList .stats-grid.stats-header > span,
+  #matchStatsList .stats-row > label{
+    min-width:0;
+  }
+  #matchStatsList .stats-row > label{
+    justify-self:stretch;
+  }
+  #matchStatsList .stats-row input[type=number]{
+    margin:0 auto;
+  }
+}
+
+
+/* A-34.3 - Tabellino PC: intestazioni centrate sugli input.
+   Le colonne restano identiche, ma Pres./Gol/Assist/Gialli/Rossi
+   vengono centrati esattamente sull'asse dei rispettivi campi. */
+@media(min-width:761px){
+  #matchStatsList .stats-grid.stats-header > span:not(:first-child){
+    text-align:center;
+  }
+  #matchStatsList .stats-grid.stats-header > span:first-child{
+    text-align:left;
+  }
+}
+
+
+/* A-34.4 - Tabellino PC: numeri centrati nelle celle */
+@media(min-width:761px){
+  #matchStatsList .stats-row input[type="number"]{
+    text-align:center;
+  }
+}
+
+
+/* A-34.5 - Tabellino PC: asse comune reale tra intestazione e controlli.
+   Ogni elemento statistico viene centrato nella propria colonna della stessa griglia. */
+@media(min-width:761px){
+  #matchStatsList .stats-grid.stats-header,
+  #matchStatsList .stats-row{
+    justify-items:center;
+  }
+  #matchStatsList .stats-grid.stats-header > span:first-child,
+  #matchStatsList .stats-row > div:first-child{
+    justify-self:stretch;
+    text-align:left;
+  }
+  #matchStatsList .stats-row > .stats-field{
+    justify-self:center;
+    width:100%;
+    box-sizing:border-box;
+  }
+  #matchStatsList .stats-row > .stats-field input[type="number"]{
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  #matchStatsList .stats-row > .stats-field.inline-check{
+    width:100%;
+    justify-content:center;
+  }
+}
+
+/* A-34.6 - Tabellino Hockey: allineamento desktop dopo l'introduzione del Verde.
+   La griglia passa da 6 a 7 colonne reali (Giocatore + 6 statistiche)
+   e mantiene intestazioni, controlli e campi sullo stesso asse. */
+@media(min-width:761px){
+  #matchStatsList .stats-grid.stats-header,
+  #matchStatsList .stats-row{
+    display:grid;
+    grid-template-columns:minmax(240px,1.8fr) repeat(6,minmax(68px,.7fr));
+    column-gap:12px;
+    align-items:center;
+    width:100%;
+    box-sizing:border-box;
+  }
+  #matchStatsList .stats-grid.stats-header{grid-auto-flow:row;}
+  #matchStatsList .stats-grid.stats-header > span:not(:first-child){text-align:center;}
+  #matchStatsList .stats-grid.stats-header > span:first-child,
+  #matchStatsList .stats-row > div:first-child{
+    justify-self:stretch;
+    text-align:left;
+  }
+  #matchStatsList .stats-row > .stats-field{
+    width:100%;
+    min-width:0;
+    justify-self:stretch;
+    align-items:center;
+  }
+  #matchStatsList .stats-row > .stats-field input[type="number"]{
+    display:block;
+    width:72px;
+    margin:0 auto;
+    text-align:center;
+  }
+  #matchStatsList .stats-row > .stats-field.inline-check{
+    justify-content:center;
+  }
+}
+
+/* A-34.6 - Allineamento anche nei riepiloghi delle partite disputate. */
+@media(min-width:761px){
+  #played .played-player-row{
+    grid-template-columns:minmax(190px,1.7fr) repeat(6,minmax(62px,.8fr));
+    column-gap:9px;
+  }
+}
+
+/* A-34.6 - Riepilogo stagionale: 6 statistiche dopo il nome. */
+@media(min-width:761px){
+  #players #seasonStatsTable .stats-season .stats-row{
+    grid-template-columns:minmax(220px,1.8fr) repeat(6,minmax(68px,1fr));
+  }
+}
+
+@media(max-width:760px){
+  #played .played-player-row > span:nth-child(4)::before{content:'Verdi';}
+  #played .played-player-row > span:nth-child(5)::before{content:'Gialli';}
+  #played .played-player-row > span:nth-child(6)::before{content:'Rossi';}
+  #played .played-player-row > span:nth-child(7)::before{content:'Voto';}
+
+  #players #seasonStatsTable .stats-season .stats-row{
+    grid-template-columns:repeat(6,minmax(0,1fr));
+  }
+  #players #seasonStatsTable .stats-season .stats-row > span:nth-child(2)::before{content:'Pres.';}
+  #players #seasonStatsTable .stats-season .stats-row > span:nth-child(3)::before{content:'Gol';}
+  #players #seasonStatsTable .stats-season .stats-row > span:nth-child(4)::before{content:'Assist';}
+  #players #seasonStatsTable .stats-season .stats-row > span:nth-child(5)::before{content:'Verdi';}
+  #players #seasonStatsTable .stats-season .stats-row > span:nth-child(6)::before{content:'Gialli';}
+  #players #seasonStatsTable .stats-season .stats-row > span:nth-child(7)::before{content:'Rossi';}
+}
+
+
+/* A-34.7 - Correzione Verde Hockey: abilita modifica del campo Verdi e allinea le 6 statistiche stagionali. */
+
+/* A34.8 - Partecipazione al voto visibile solo all'Admin */
+.vote-participation{margin-top:14px;border:1px solid var(--border,#dfe7e2);border-radius:14px;overflow:hidden;background:var(--surface,#fff)}
+.vote-participation-title{padding:10px 12px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--primary-soft,#effaf3);border-bottom:1px solid var(--border,#dfe7e2)}
+.vote-participation-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;border-bottom:1px solid var(--border,#dfe7e2);font-size:.9rem}
+.vote-participation-row:last-child{border-bottom:0}
+.vote-participation-name{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vote-participation-status{font-size:.78rem;white-space:nowrap;font-weight:700}
+.vote-participation-row.has-voted .vote-participation-status{color:var(--primary,#159447)}
+.vote-participation-row.not-voted .vote-participation-status{color:var(--muted,#5a7463)}
+@media(max-width:520px){.vote-participation-row{align-items:flex-start;flex-direction:column;gap:3px}}
+
+/* Dettaglio voti lordi e punteggio netto nelle classifiche pubbliche */
+.ranking-score-detail{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;opacity:.9;margin-top:3px}.ranking-score-detail span{white-space:nowrap}
+
+
+/* A35.2 - Riepilogo stagione ripristinato nello Storico Squadra. */
+.storico-season-summary{margin-top:16px;}
+.storico-season-head{margin-bottom:14px;}
+.storico-season-net{font-weight:800;}
+.storico-season-table th,.storico-season-table td{white-space:nowrap;}
+@media(max-width:760px){
+  .storico-season-summary{padding:14px;}
+  .storico-season-table{display:none;}
+  .storico-season-summary .storico-mobile-list{display:grid;}
+  .storico-season-card{margin:0;}
+}
+@media(min-width:761px){
+  .storico-season-summary .storico-mobile-list{display:none;}
+}
+
+
+/* A35.3 - FIX RIEPILOGO STAGIONE SU SMARTPHONE
+   Il riepilogo stagionale deve rimanere sempre visibile nell'area Storico Squadra.
+   Su mobile la tabella viene sostituita dalle card verticali, senza nascondere
+   l'intero contenitore. */
+.storico-season-summary{display:block !important;visibility:visible !important;opacity:1 !important;}
+.storico-season-summary .storico-season-head{display:block;}
+.storico-season-summary .storico-mobile-list{display:none;}
+@media(max-width:760px){
+  .storico-season-summary{
+    display:block !important;
+    width:100%;
+    box-sizing:border-box;
+    margin-top:16px;
+    padding:14px;
+  }
+  .storico-season-summary .storico-season-table{display:none !important;}
+  .storico-season-summary .storico-mobile-list{
+    display:flex !important;
+    flex-direction:column;
+    gap:10px;
+    width:100%;
+  }
+  .storico-season-summary .storico-season-card{
+    display:block !important;
+    width:100%;
+    box-sizing:border-box;
+    margin:0;
+    padding:12px;
+    border:1px solid var(--border,#dfe7e2);
+    border-radius:12px;
+    background:var(--surface,#fff);
+  }
+  .storico-season-summary .storico-mobile-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .storico-season-summary .storico-mobile-primary{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+  }
+  .storico-season-summary .storico-mobile-primary>div{
+    min-width:0;
+    padding:8px 6px;
+    border-radius:9px;
+    background:var(--primary-soft,#effaf3);
+    text-align:center;
+  }
+  .storico-season-summary .storico-mobile-primary small{
+    display:block;
+    font-size:.68rem;
+    line-height:1.15;
+    color:var(--muted,#5a7463);
+    margin-bottom:3px;
+  }
+  .storico-season-summary .storico-mobile-primary strong{
+    display:block;
+    font-size:1rem;
+  }
+  .storico-season-summary .storico-mobile-cards{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+  }
+  .storico-season-summary .storico-mobile-cards span{
+    font-size:.76rem;
+    padding:4px 7px;
+    border-radius:999px;
+    background:#f3f6f4;
+  }
+}

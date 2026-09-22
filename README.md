@@ -1,2 +1,25 @@
-# bestandfirest_juvenilia
-Best&amp;Fairest - Fair Play - Better Team
+# Best&Fairest Beta 7.20.4 - A-05
+
+## Fix ricaricamento tabellino
+- La lettura delle statistiche della partita non usa più la LIST della sottocollezione `stats`.
+- Vengono letti i singoli documenti `stats/{playerId}` usando gli ID già presenti nella distinta.
+- Nessuna modifica alle Firestore Rules.
+- Nessuna modifica al salvataggio del tabellino, ai voti o al calendario.
+- Mantiene il reset della cache introdotto in A-04.
+
+A-11: rifinitura finestra voto 6 ore. Il countdown del tabellino si aggiorna in tempo reale, allo scadere viene mostrato un messaggio esplicito e la partita corrente viene ricalcolata una sola volta per consentire il passaggio alla prossima partita senza query ripetute.
+
+
+## A36.0 - Ruoli
+- Introdotto ruolo `superAdmin` protetto dalle Firestore Rules.
+- Gli Admin ordinari mantengono le funzioni di gestione della lega ma non possono modificare i ruoli.
+- Solo il Super Admin può promuovere/rimuovere Admin.
+- La Cloud Function `updatePlayerEmail` accetta Admin e Super Admin.
+- La gestione multi-lega resta fuori da questa release.
+
+
+## A36.1 · Produzione Serie A/1 Prato Maschile
+- League ID di produzione: `serie-a1-prato-maschile`
+- Le nuove registrazioni vengono associate alla lega di produzione, non alla Demo.
+- La compatibilità specifica con Juvenilia è stata rimossa da questa build.
+- La Demo League resta disponibile nel progetto Firebase come ambiente separato.

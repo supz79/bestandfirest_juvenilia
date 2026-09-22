@@ -1,0 +1,726 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================
+    // FUNZIONI GENERALI
+    // =========================================================
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function me() {
+      return get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+    }
+
+    function superAdmin() {
+      return signedIn()
+        && me().role == 'superAdmin'
+        && me().active == true;
+    }
+
+    function admin() {
+      return signedIn()
+        && (me().role == 'admin' || me().role == 'superAdmin')
+        && me().active == true;
+    }
+
+    function player() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && me().role == 'player'
+        && me().active == true;
+    }
+
+    function matchData(matchId) {
+      return get(
+        /databases/$(database)/documents/matches/$(matchId)
+      ).data;
+    }
+
+    function voteAfter(matchId) {
+      return getAfter(
+        /databases/$(database)/documents/matches/$(matchId)/votes/$(request.auth.uid)
+      ).data;
+    }
+
+    function voteBeforeExists(matchId) {
+      return exists(
+        /databases/$(database)/documents/matches/$(matchId)/votes/$(request.auth.uid)
+      );
+    }
+
+    // Il tabellino può essere modificato: prima della finalizzazione,
+    // finché la finestra di voto è aperta. Una modifica eccezionale
+    // riapre temporaneamente la scrittura tramite flag server-side.
+    function tabellinoWriteAllowed(matchId) {
+      let m = matchData(matchId);
+      return m.tabellinoExceptionOpen == true
+        || m.status != 'finished'
+        || (
+          m.status == 'finished'
+          && (!('tabellinoFinalizzato' in m) || m.tabellinoFinalizzato != true)
+          && (!('votingClosed' in m) || m.votingClosed != true)
+          && ('finishedAt' in m)
+          && request.time <= m.finishedAt + duration.value(6, 'h')
+        );
+    }
+
+
+    // =========================================================
+    // VALIDAZIONE RISULTATI PUBBLICI
+    // =========================================================
+
+    function validPublicResultBase() {
+      return request.resource.data.keys().hasOnly([
+          'points',
+          'first',
+          'second',
+          'third',
+          'votes'
+        ])
+        && request.resource.data.points is int
+        && request.resource.data.first is int
+        && request.resource.data.second is int
+        && request.resource.data.third is int
+        && request.resource.data.votes is int
+        && request.resource.data.points >= 0
+        && request.resource.data.first >= 0
+        && request.resource.data.second >= 0
+        && request.resource.data.third >= 0
+        && request.resource.data.votes >= 0;
+    }
+
+
+    // =========================================================
+    // VALIDAZIONE STATISTICHE
+    // =========================================================
+
+    function validStatBase() {
+      return request.resource.data.keys().hasOnly([
+          'appearance',
+          'goals',
+          'assists',
+          'green',
+          'yellow',
+          'red'
+        ])
+        && request.resource.data.appearance is int
+        && request.resource.data.goals is int
+        && request.resource.data.assists is int
+        && request.resource.data.green is int
+        && request.resource.data.yellow is int
+        && request.resource.data.red is int
+        && request.resource.data.appearance == 1
+        && request.resource.data.goals >= 0
+        && request.resource.data.assists >= 0
+        && request.resource.data.green >= 0
+        && request.resource.data.yellow >= 0
+        && request.resource.data.red >= 0;
+    }
+
+
+    // =========================================================
+    // USERS
+    // =========================================================
+
+    match /users/{id} {
+
+      // Ogni utente può leggere il proprio profilo.
+      // L'Admin può leggere tutti i profili.
+      allow get: if signedIn()
+        && (
+          request.auth.uid == id
+          || admin()
+        );
+
+      // Solo Admin può elencare gli utenti.
+      allow list: if admin();
+
+      // Registrazione iniziale di un Player.
+      allow create: if signedIn()
+        && request.auth.uid == id
+        && request.resource.data.role == 'player'
+        && request.resource.data.active == false
+        && request.resource.data.playerId == null
+        && request.resource.data.registrationStatus == 'pending';
+
+      // Il Super Admin può gestire i ruoli. Un Admin ordinario può modificare
+      // solo profili Player della propria lega e non può alterarne ruolo o lega.
+      allow update: if superAdmin()
+        || (admin()
+          && me().role == 'admin'
+          && resource.data.role == 'player'
+          && request.resource.data.role == 'player'
+          && resource.data.leagueId == me().leagueId
+          && request.resource.data.leagueId == resource.data.leagueId);
+
+      // Nessuna cancellazione degli utenti dall'app.
+      allow delete: if false;
+    }
+
+
+    // =========================================================
+    // LEAGUES
+    // =========================================================
+
+    match /leagues/{leagueId} {
+
+      // Membri della stessa lega possono leggere la lega.
+      // Gli Admin possono leggere la propria lega.
+      allow get, list: if signedIn()
+        && (
+          admin()
+          || me().leagueId == leagueId
+        );
+
+      // Creazione/modifica/cancellazione solo Admin.
+      allow create: if superAdmin();
+      allow update: if superAdmin() || (admin() && me().leagueId == leagueId);
+      allow delete: if superAdmin();
+    }
+
+
+    // =========================================================
+    // PLAYERS
+    // =========================================================
+
+    match /players/{playerId} {
+
+      // I membri della stessa lega possono leggere il roster.
+      allow get, list: if signedIn()
+        && (
+          admin()
+          || me().leagueId == resource.data.leagueId
+        );
+
+      // Solo Admin può modificare il roster.
+      allow create: if admin();
+      allow update: if admin();
+      allow delete: if admin();
+    }
+
+
+    // =========================================================
+    // MATCHES
+    // =========================================================
+
+    match /matches/{matchId} {
+
+      // Tutti i membri attivi della lega possono vedere
+      // le partite.
+      allow get, list: if signedIn()
+        && (
+          admin()
+          || me().leagueId == resource.data.leagueId
+        );
+
+
+      // Solo Admin può creare una partita.
+      allow create: if admin()
+        && me().leagueId == request.resource.data.leagueId;
+
+
+      // Solo Admin può cancellare una partita.
+      allow delete: if admin();
+
+
+      // -------------------------------------------------------
+      // MODIFICA PARTITA
+      // -------------------------------------------------------
+      //
+      // 1. Prima dell'inizio:
+      //    modifica normalmente consentita.
+      //
+      // 2. Dopo l'inizio:
+      //    data, ora, squadre e distinta sono congelate.
+      //
+      //    Sono consentiti solamente:
+      //    - status
+      //    - finishedAt
+      //    - adminOverrideOpen
+      //    - updatedAt
+      //
+      // 3. Durante lo sblocco eccezionale:
+      //    può essere modificata solamente la distinta.
+      //
+      // 4. Una partita TERMINATA è definitivamente congelata.
+      // -------------------------------------------------------
+
+      allow update: if admin()
+        && me().leagueId == resource.data.leagueId
+        && (
+
+          // -----------------------------------------------
+          // PARTITA NON ANCORA INIZIATA
+          // -----------------------------------------------
+          (
+            (
+              !('scheduledStart' in resource.data)
+              || request.time < resource.data.scheduledStart
+            )
+          )
+
+          ||
+
+          // -----------------------------------------------
+          // PARTITA GIÀ INIZIATA
+          // -----------------------------------------------
+          (
+            resource.data.status != 'finished'
+            && request.resource.data.scheduledStart
+                 == resource.data.scheduledStart
+            && request.resource.data.lineup
+                 == resource.data.lineup
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys()
+                 .hasOnly([
+                   'status',
+                   'finishedAt',
+                   'adminOverrideOpen',
+                   'updatedAt'
+                 ])
+          )
+
+          ||
+
+          // -----------------------------------------------
+          // SBLOCCO ECCEZIONALE DELLA DISTINTA
+          // -----------------------------------------------
+          (
+            resource.data.status != 'finished'
+            && resource.data.adminOverrideOpen == true
+            && request.resource.data.scheduledStart
+                 == resource.data.scheduledStart
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys()
+                 .hasOnly([
+                   'lineup',
+                   'adminOverrideOpen',
+                   'updatedAt'
+                 ])
+          )
+
+          ||
+
+          // -----------------------------------------------
+          // APERTURA DELLO SBLOCCO ECCEZIONALE
+          // -----------------------------------------------
+          (
+            resource.data.status != 'finished'
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys()
+                 .hasOnly([
+                   'adminOverrideOpen',
+                   'updatedAt'
+                 ])
+          )
+
+          ||
+
+          // -----------------------------------------------
+          // CHIUSURA ANTICIPATA DELLA VOTAZIONE
+          // -----------------------------------------------
+          (
+            resource.data.status == 'finished'
+            && request.resource.data.votingClosed == true
+            && (!('votingClosed' in resource.data) || resource.data.votingClosed != true)
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys()
+                 .hasOnly([
+                   'votingClosed',
+                   'votingClosedAt',
+                   'updatedAt'
+                 ])
+          )
+
+
+          ||
+
+          // -----------------------------------------------
+          // APERTURA / CHIUSURA MODIFICA ECCEZIONALE TABELLINO
+          // -----------------------------------------------
+          (
+            resource.data.status == 'finished'
+            && request.resource.data.tabellinoExceptionOpen == true
+            && (!('tabellinoExceptionOpen' in resource.data) || resource.data.tabellinoExceptionOpen != true)
+            && (
+              resource.data.tabellinoFinalizzato == true
+              || resource.data.votingClosed == true
+              || (
+                ('finishedAt' in resource.data)
+                && request.time > resource.data.finishedAt + duration.value(6, 'h')
+              )
+            )
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys()
+                 .hasOnly([
+                   'tabellinoExceptionOpen',
+                   'updatedAt'
+                 ])
+          )
+
+          ||
+
+          (
+            resource.data.status == 'finished'
+            && resource.data.tabellinoExceptionOpen == true
+            && request.resource.data.tabellinoExceptionOpen == false
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys()
+                 .hasOnly([
+                   'tabellinoExceptionOpen',
+                   'updatedAt'
+                 ])
+          )
+
+          ||
+
+          // -----------------------------------------------
+          // FINALIZZAZIONE DEL TABELLINO
+          // -----------------------------------------------
+          (
+            resource.data.status == 'finished'
+            && request.resource.data.tabellinoFinalizzato == true
+            && (!('tabellinoFinalizzato' in resource.data) || resource.data.tabellinoFinalizzato != true)
+            && request.resource.data.diff(resource.data)
+                 .affectedKeys()
+                 .hasOnly([
+                   'tabellinoFinalizzato',
+                   'updatedAt'
+                 ])
+          )
+        );
+
+
+      // =====================================================
+      // VOTES
+      // =====================================================
+
+      match /votes/{voterUid} {
+
+        // I voti individuali sono segreti.
+        // Solo Admin può leggere tutti i voti; il Player può leggere
+        // esclusivamente il proprio documento, per ricostruire il voto
+        // dopo logout/login senza poter vedere quello degli altri.
+        allow get: if admin()
+          || (player() && request.auth.uid == voterUid);
+        allow list: if admin();
+
+
+        // ---------------------------------------------------
+        // CREAZIONE DEL VOTO
+        // ---------------------------------------------------
+
+        allow create: if player()
+
+          // Il voto può essere creato solo dall'utente stesso.
+          && request.auth.uid == voterUid
+
+          // La partita deve essere terminata.
+          && matchData(matchId).status == 'finished'
+
+          // Deve esistere finishedAt.
+          && ('finishedAt' in matchData(matchId))
+
+          // Finestra di voto: 6 ore dalla chiusura.
+          && request.time
+             <= matchData(matchId).finishedAt
+                + duration.value(6, 'h')
+
+          // Il votante deve essere nella distinta.
+          && me().playerId in matchData(matchId).lineup
+
+          // Struttura esatta del voto.
+          && request.resource.data.keys().hasOnly([
+               'ranking'
+             ])
+
+          && request.resource.data.ranking is list
+          && request.resource.data.ranking.size() == 3
+
+          && request.resource.data.ranking[0] is string
+          && request.resource.data.ranking[1] is string
+          && request.resource.data.ranking[2] is string
+
+          // I tre giocatori devono essere nella distinta.
+          && request.resource.data.ranking[0]
+               in matchData(matchId).lineup
+          && request.resource.data.ranking[1]
+               in matchData(matchId).lineup
+          && request.resource.data.ranking[2]
+               in matchData(matchId).lineup
+
+          // Nessun doppione.
+          && request.resource.data.ranking[0]
+               != request.resource.data.ranking[1]
+          && request.resource.data.ranking[0]
+               != request.resource.data.ranking[2]
+          && request.resource.data.ranking[1]
+               != request.resource.data.ranking[2]
+
+          // Non si può votare sé stessi.
+          && request.resource.data.ranking[0]
+               != me().playerId
+          && request.resource.data.ranking[1]
+               != me().playerId
+          && request.resource.data.ranking[2]
+               != me().playerId;
+
+
+        // Il voto è IMMUTABILE.
+        allow update: if false;
+
+
+        // Solo Admin può cancellare un voto.
+        allow delete: if admin();
+      }
+
+
+      // =====================================================
+      // MATCH STATS
+      // =====================================================
+
+      match /stats/{playerId} {
+
+        // Le statistiche sono leggibili dai membri della lega.
+        allow get, list: if signedIn()
+          && (
+            admin()
+            || me().leagueId == matchData(matchId).leagueId
+          );
+
+
+        // Solo Admin può creare/modificare le statistiche.
+        //
+        // Il giocatore deve essere nella distinta.
+        // La statistica deve rappresentare una presenza reale.
+        allow create, update: if admin()
+          && me().leagueId == matchData(matchId).leagueId
+          && playerId in matchData(matchId).lineup
+          && validStatBase()
+          && tabellinoWriteAllowed(matchId);
+
+
+        // Solo Admin può cancellare le statistiche.
+        // La cancellazione definitiva di una partita deve poter rimuovere
+        // anche le statistiche di un tabellino già finalizzato/bloccato.
+        allow delete: if admin()
+          && me().leagueId == matchData(matchId).leagueId;
+      }
+
+
+      // =====================================================
+      // SUMMARY
+      // =====================================================
+
+      match /summary/{summaryId} {
+
+        // Risultato leggibile dai membri della lega.
+        allow get, list: if signedIn()
+          && (
+            admin()
+            || me().leagueId == matchData(matchId).leagueId
+          );
+
+
+        // Solo Admin può salvare il risultato.
+        allow create, update: if admin()
+          && me().leagueId == matchData(matchId).leagueId
+          && tabellinoWriteAllowed(matchId)
+          && request.resource.data.keys().hasOnly([
+               'homeScore',
+               'awayScore',
+               'updatedAt'
+             ])
+          && request.resource.data.homeScore is int
+          && request.resource.data.awayScore is int
+          && request.resource.data.homeScore >= 0
+          && request.resource.data.awayScore >= 0;
+
+
+        // La cancellazione definitiva della partita può rimuovere
+        // il risultato anche se il tabellino è già stato finalizzato.
+        allow delete: if admin()
+          && me().leagueId == matchData(matchId).leagueId;
+      }
+
+
+      // =====================================================
+      // PUBLIC RESULTS
+      // =====================================================
+
+      match /publicResults/{playerId} {
+
+        // Classifica aggregata leggibile dai membri della lega.
+        allow get, list: if signedIn()
+          && (
+            admin()
+            || me().leagueId == matchData(matchId).leagueId
+          );
+
+
+        // Admin può ricostruire/modificare gli aggregati.
+        allow create, update: if admin();
+
+
+        // ---------------------------------------------------
+        // CREAZIONE AGGREGATO DA PARTE DEL PLAYER
+        // ---------------------------------------------------
+
+        allow create: if player()
+          && me().leagueId == matchData(matchId).leagueId
+
+          // Deve essere il primo voto dell'utente.
+          && !voteBeforeExists(matchId)
+
+          // Il voto deve essere presente nella transazione.
+          && voteAfter(matchId).ranking is list
+
+          // Il giocatore deve essere nella distinta.
+          && playerId in matchData(matchId).lineup
+
+          && validPublicResultBase()
+
+          // Punti.
+          && request.resource.data.points
+             ==
+             (
+               voteAfter(matchId).ranking[0] == playerId
+               ? 3
+               :
+               (
+                 voteAfter(matchId).ranking[1] == playerId
+                 ? 2
+                 :
+                 (
+                   voteAfter(matchId).ranking[2] == playerId
+                   ? 1
+                   : 0
+                 )
+               )
+             )
+
+          // Primo posto.
+          && request.resource.data.first
+             ==
+             (
+               voteAfter(matchId).ranking[0] == playerId
+               ? 1
+               : 0
+             )
+
+          // Secondo posto.
+          && request.resource.data.second
+             ==
+             (
+               voteAfter(matchId).ranking[1] == playerId
+               ? 1
+               : 0
+             )
+
+          // Terzo posto.
+          && request.resource.data.third
+             ==
+             (
+               voteAfter(matchId).ranking[2] == playerId
+               ? 1
+               : 0
+             )
+
+          // Numero voti ricevuti.
+          && request.resource.data.votes
+             ==
+             (
+               playerId in voteAfter(matchId).ranking
+               ? 1
+               : 0
+             );
+
+
+        // ---------------------------------------------------
+        // AGGIORNAMENTO AGGREGATO DA PARTE DEL PLAYER
+        // ---------------------------------------------------
+
+        allow update: if player()
+          && me().leagueId == matchData(matchId).leagueId
+
+          && !voteBeforeExists(matchId)
+
+          && voteAfter(matchId).ranking is list
+
+          && playerId in matchData(matchId).lineup
+
+          && validPublicResultBase()
+
+          && request.resource.data.points
+             ==
+             resource.data.points
+             +
+             (
+               voteAfter(matchId).ranking[0] == playerId
+               ? 3
+               :
+               (
+                 voteAfter(matchId).ranking[1] == playerId
+                 ? 2
+                 :
+                 (
+                   voteAfter(matchId).ranking[2] == playerId
+                   ? 1
+                   : 0
+                 )
+               )
+             )
+
+          && request.resource.data.first
+             ==
+             resource.data.first
+             +
+             (
+               voteAfter(matchId).ranking[0] == playerId
+               ? 1
+               : 0
+             )
+
+          && request.resource.data.second
+             ==
+             resource.data.second
+             +
+             (
+               voteAfter(matchId).ranking[1] == playerId
+               ? 1
+               : 0
+             )
+
+          && request.resource.data.third
+             ==
+             resource.data.third
+             +
+             (
+               voteAfter(matchId).ranking[2] == playerId
+               ? 1
+               : 0
+             )
+
+          && request.resource.data.votes
+             ==
+             resource.data.votes
+             +
+             (
+               playerId in voteAfter(matchId).ranking
+               ? 1
+               : 0
+             );
+
+
+        // Solo Admin può cancellare gli aggregati.
+        allow delete: if admin();
+      }
+    }
+  }
+}
