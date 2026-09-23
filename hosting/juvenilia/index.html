@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0d6b32">
+  <meta name="description" content="Best&Fairest - il voto ai migliori in campo">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css?v=7.46">
+  <title>Best&Fairest</title>
+
+<style id="storico-squadra-style">
+.storico-intro h3{margin-bottom:6px}
+.storico-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;font-size:.86rem}
+.storico-legend span{padding:6px 10px;border-radius:999px;background:var(--league-primary-soft,#effaf3);border:1px solid var(--league-border,#cfe7d6)}
+.storico-day{margin-bottom:14px}
+.storico-day-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.storico-day-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.storico-metric{padding:5px 9px;border-radius:999px;background:rgba(127,127,127,.09);font-size:.82rem}
+.storico-net{font-weight:800}
+.storico-table-wrap{overflow-x:auto}
+.storico-table{width:100%;border-collapse:collapse;min-width:820px}
+.storico-table th,.storico-table td{padding:9px 8px;border-bottom:1px solid rgba(127,127,127,.15);text-align:center;white-space:nowrap}
+.storico-table th:first-child,.storico-table td:first-child{text-align:left;min-width:150px}
+.storico-table .not-lineup{opacity:.48}
+.storico-status{font-size:.88rem}
+.storico-day-total{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding-top:12px}
+.storico-filter{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.storico-filter select{min-width:180px}
+@media(max-width:700px){
+  .storico-table{min-width:760px}
+  .storico-day-head{align-items:flex-start;flex-direction:column}
+}
+.storico-mobile-list{display:none}
+.storico-mobile-card{padding:14px;border:1px solid rgba(127,127,127,.16);border-radius:16px;background:var(--surface,#fff);box-shadow:0 4px 14px rgba(0,0,0,.04)}
+.storico-mobile-card + .storico-mobile-card{margin-top:10px}
+.storico-mobile-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.storico-mobile-head b{font-size:.98rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.storico-mobile-badge{font-size:.72rem;font-weight:700;white-space:nowrap}
+.storico-mobile-badge.is-voted{color:var(--primary,#159447)}
+.storico-mobile-badge.not-voted{color:var(--muted,#5a7463)}
+.storico-mobile-primary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.storico-mobile-primary>div{padding:9px 7px;border-radius:12px;background:rgba(127,127,127,.07);text-align:center}
+.storico-mobile-primary small,.storico-mobile-grid small{display:block;font-size:.68rem;opacity:.68;margin-bottom:2px}
+.storico-mobile-primary strong{font-size:1.05rem}
+.storico-mobile-cards{display:flex;gap:7px;margin-top:9px;font-size:.78rem;opacity:.82}
+.storico-mobile-cards span{padding:4px 7px;border-radius:999px;background:rgba(127,127,127,.07)}
+.storico-mobile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.storico-mobile-grid>div{text-align:center;padding:8px;border-radius:10px;background:rgba(127,127,127,.06)}
+@media(max-width:700px){
+  .storico-table-wrap{display:none}
+  .storico-mobile-list{display:block;margin-top:14px}
+}
+@media(max-width:380px){
+  .storico-mobile-card{padding:12px}
+  .storico-mobile-head{align-items:flex-start;flex-direction:column;gap:4px}
+  .storico-mobile-primary{gap:5px}
+  .storico-mobile-primary>div{padding:8px 4px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><img class="brand-logo" src="assets/best-fairest-logo.png" alt="Best&Fairest - Fair Play, Better Team"></div>
+  <button id="roleBtn" class="ghost">Accedi</button>
+</header>
+
+<main id="app">
+  <section id="sessionBoot" class="session-boot screen active" aria-live="polite">
+    <div class="session-boot-card">
+      <div class="session-boot-brand"><span aria-hidden="true">🏑</span><span>Best&Fairest</span></div>
+      <img class="session-boot-logo" src="assets/best-fairest-logo.png" alt="Best&Fairest">
+      <h2 class="session-boot-title">Benvenuto</h2>
+      <p class="session-boot-subtitle">Stiamo ripristinando la tua sessione…</p>
+      <div class="session-spinner" aria-hidden="true"></div>
+      <div class="session-boot-progress" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section id="login" class="screen">
+    <div class="card login-card">
+      <img class="login-logo" src="assets/best-fairest-logo.png" alt="Best&Fairest - Fair Play, Better Team">
+      <div class="section-head"><div><span class="eyebrow">ACCESSO</span><h2>Accedi a Best&Fairest</h2></div></div>
+      <p class="muted">Usa l'account assegnato alla tua squadra.</p>
+      <form id="loginForm">
+        <label>Email<input id="loginEmail" type="email" autocomplete="username" required></label>
+        <label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label>
+        <button class="primary" type="submit">🔐 Accedi</button>
+        <button class="ghost" type="button" id="showRegisterBtn">📝 Registrati come Player</button>
+        <p id="loginMsg" class="success"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="register" class="screen">
+    <div class="card login-card">
+      <div class="section-head"><div><span class="eyebrow">REGISTRAZIONE</span><h2>Crea il tuo account</h2></div></div>
+      <p class="muted">Inserisci i tuoi dati. L'Admin della lega riceverà la registrazione e assocerà il tuo account al giocatore corretto.</p>
+      <form id="registerForm">
+        <label>Nome<input id="registerNome" required autocomplete="given-name"></label>
+        <label>Cognome<input id="registerCognome" required autocomplete="family-name"></label>
+        <label>Email<input id="registerEmail" type="email" required autocomplete="email"></label>
+        <label>Password<input id="registerPassword" type="password" minlength="6" required autocomplete="new-password"></label>
+        <label>Conferma password<input id="registerPassword2" type="password" minlength="6" required autocomplete="new-password"></label>
+        <button class="primary" type="submit">📝 Invia registrazione</button>
+        <button class="ghost" type="button" id="cancelRegisterBtn">Torna all'accesso</button>
+        <p id="registerMsg" class="success"></p>
+      </form>
+    </div>
+  </section>
+
+  <section id="verifyEmail" class="screen">
+    <div class="card login-card">
+      <img class="login-logo" src="assets/best-fairest-logo.png" alt="Best&Fairest - Fair Play, Better Team">
+      <div class="section-head"><div><span class="eyebrow">VERIFICA EMAIL</span><h2>Controlla la tua email</h2></div></div>
+      <p class="muted">Abbiamo inviato un link di verifica a:</p>
+      <p id="verifyEmailText" class="verify-email"></p>
+      <p class="muted">Apri il messaggio e clicca sul link. Poi torna qui e premi <b>Ho verificato la mia email</b>.</p>
+      <div class="verify-actions">
+        <button id="checkVerificationBtn" class="primary" type="button">✅ Ho verificato la mia email</button>
+        <button id="resendVerificationBtn" class="ghost" type="button">📧 Invia nuovamente email</button>
+        <button id="verifyLogoutBtn" class="ghost" type="button">Esci</button>
+      </div>
+      <p id="verifyMsg" class="success"></p>
+    </div>
+  </section>
+
+  <section id="dashboard" class="screen">
+    <div class="hero card league-hero">
+      <div class="league-hero-copy">
+        <span class="eyebrow">LEGA</span>
+        <h1 id="leagueName">Best&Fairest</h1>
+        <p id="seasonName">Stagione 2026/27</p>
+      </div>
+      <div class="league-hero-logo-wrap">
+        <img id="leagueLogo" class="league-hero-logo hidden" src="" alt="Stemma della lega">
+        <div id="leagueLogoFallback" class="hero-ball" aria-hidden="true">🏆</div>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <button class="action card" data-screen="match"><span>📋</span><b>Distinta di Gara</b><small>Distinta e votazione</small></button>
+      <button class="action card" data-screen="storicoSquadra"><span>📊</span><b>Classifiche Squadra</b><small>Voti, malus e statistiche</small></button>
+      <button class="action card" data-screen="players"><span>👥</span><b>Rosa squadra</b><small>Giocatori registrati</small></button>
+      <button class="action card" data-screen="played"><span>🏟️</span><b>Partite disputate</b><small>Risultati e statistiche</small></button>
+      <button class="action card admin-only" data-screen="admin"><span>⚙️</span><b>Amministrazione</b><small>Gestione lega</small></button>
+      <button class="action card admin-only" data-screen="calendar"><span>📅</span><b>Calendario</b><small>Importa e modifica le partite</small></button>
+    </div>
+
+    <div class="card status" id="dashboardMatchCard" role="button" tabindex="0" aria-label="Apri partita corrente">
+      <div><div><span class="eyebrow" id="matchEyebrow">PROSSIMA PARTITA</span><h3 id="matchTitle">Caricamento partita...</h3></div><span id="voteState" class="pill open">APERTA</span></div>
+      <div class="progress"><span id="voteProgress"></span></div>
+      <div id="matchCountdown" class="match-countdown hidden" aria-live="polite"></div>
+      <small id="voteCount">0 / 0 giocatori hanno votato</small>
+    </div>
+  </section>
+
+  <section id="match" class="screen">
+    <div class="section-head"><button class="back" data-screen="dashboard">‹</button><div><span class="eyebrow">PARTITA</span><h2>Caricamento partita...</h2></div></div>
+    <div class="card">
+      <div class="match-meta"><span>Giornata</span><span>Data e ora</span></div>
+      <h3>Distinta SIAT FC</h3>
+      <p class="muted">Solo i giocatori in distinta possono votare e ricevere voti.</p>
+      <div id="rosterList" class="check-list"></div>
+      <button id="lockBtn" class="primary">🔒 Blocca distinta</button><p id="matchLockStatus" class="muted"></p>
+    </div>
+    <div id="matchStatsCard" class="card hidden">
+      <span class="eyebrow">TABELLINO</span>
+      <h3>Statistiche della partita</h3>
+      <p class="muted">L'Admin può registrare il risultato e le statistiche dei giocatori che hanno disputato la partita.</p>
+      <div id="matchResultEditor" class="match-result-editor"></div>
+      <div id="matchStatsList"></div>
+      <div class="modal-actions"><button id="saveMatchStatsBtn" class="primary" type="button">💾 Salva tabellino</button><button id="finalizeMatchStatsBtn" class="small-btn" type="button">✅ Finalizza tabellino</button><button id="exceptionalEditStatsBtn" class="small-btn" type="button">✏️ Modifica eccezionale</button></div>
+      <p id="matchStatsMsg" class="success"></p>
+    </div>
+
+    <div id="votingCard" class="card hidden">
+      <span class="eyebrow">VOTAZIONE</span>
+      <h3>Vota i migliori 3</h3>
+      <p class="muted">Non puoi votare te stesso. I voti sono segreti.</p>
+      <div id="voteTimer" class="pill open">⏱️ Tempo per votare: --</div>
+      <label>🥇 1° posto <select id="vote1"></select></label>
+      <label>🥈 2° posto <select id="vote2"></select></label>
+      <label>🥉 3° posto <select id="vote3"></select></label>
+      <button id="submitVote" class="primary">Conferma voto</button>
+      <p id="voteMsg" class="success"></p>
+    </div>
+
+    <div id="adminVotingCard" class="card admin-only hidden">
+      <span class="eyebrow">GESTIONE VOTAZIONE</span>
+      <h3>Votazione post-partita</h3>
+      <p class="muted">L’Admin può chiudere anticipatamente la finestra di voto, senza modificare lo stato della partita.</p>
+      <div id="adminVoteTimer" class="pill open">⏱️ Tempo per votare: --</div>
+      <small id="adminVoteCount" class="muted">0 / 0 giocatori hanno votato</small>
+      <div id="adminVoteParticipation" class="vote-participation" aria-live="polite">
+        <p class="muted">Caricamento partecipazione al voto…</p>
+      </div>
+      <div class="modal-actions" style="margin-top:14px;">
+        <button id="closeVotingBtn" class="danger-btn" type="button">🔒 Chiudi votazioni</button>
+      </div>
+      <p id="adminVoteMsg" class="success"></p>
+    </div>
+  </section>
+
+
+  <section id="played" class="screen">
+    <div class="section-head"><button class="back" data-screen="dashboard">‹</button><div><span class="eyebrow">STORICO</span><h2>Partite disputate</h2></div></div>
+    <div id="playedMatchesList"></div>
+  </section>
+
+  <section id="players" class="screen">
+    <div class="section-head"><button class="back" data-screen="dashboard">‹</button><div><span class="eyebrow">ROSA</span><h2>Giocatori</h2></div></div>
+    <div class="card"><div id="playersTable"></div><div id="seasonStatsTable" class="stats-season"></div></div>
+  </section>
+
+  
+  <section id="storicoSquadra" class="screen">
+    <div class="section-head">
+      <button class="back" data-screen="dashboard">‹</button>
+      <div><span class="eyebrow">SQUADRA · STAGIONE</span><h2>Classifiche Squadra</h2></div>
+    </div>
+    <div class="card storico-intro">
+      <h3>Andamento giornata per giornata</h3>
+      <p class="muted">Per ogni player sono riportati i punti ricevuti dalle votazioni, i cartellini, il malus, il punteggio netto e la partecipazione al voto.</p>
+      <div class="storico-legend">
+        <span>✓ Ha votato</span><span>○ Non ha votato</span><span>— Non schierato</span>
+      </div>
+    </div>
+    <div id="storicoSquadraList"></div>
+  </section>
+
+<section id="calendar" class="screen">
+    <div class="section-head"><button class="back" data-screen="dashboard">‹</button><div><span class="eyebrow">ADMIN</span><h2>Calendario</h2></div></div>
+    <div class="card">
+      <div class="calendar-toolbar"><div><h3>Calendario partite</h3><p class="muted">Casa/trasferta viene riconosciuta automaticamente confrontando le squadre del file con la squadra della lega.</p></div><button id="newMatchBtn" class="primary">＋ Nuova partita</button></div>
+      <div class="import-box"><label class="file-btn">📥 Importa Excel<input id="excelInput" type="file" accept=".xlsx,.xls,.csv"></label><span class="muted">Il file viene prima analizzato in anteprima.</span></div>
+      <p id="calendarMsg" class="muted"></p>
+    </div>
+    <div id="calendarList"></div>
+    <div id="importPreviewCard" class="card hidden">
+      <div class="calendar-toolbar"><div><h3>Anteprima importazione</h3><p class="muted">Le partite esistenti vengono aggiornate tramite una chiave stabile. Quelle assenti dal file non vengono cancellate.</p></div></div>
+      <div id="importPreview"></div>
+      <div class="modal-actions"><button id="importCancel" class="ghost dark">Annulla</button><button id="importCommit" class="primary">Conferma importazione</button></div>
+    </div>
+  </section>
+
+  <div id="matchModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="section-head"><div><span class="eyebrow">ADMIN</span><h2>Modifica partita</h2></div><button id="closeMatchModal" class="back">×</button></div>
+      <form id="matchEditForm">
+        <input id="matchEditId" type="hidden">
+        <div class="form-grid"><label>Giornata<input id="matchEditRound" required></label><label>Fase<select id="matchEditPhase"><option>Andata</option><option>Ritorno</option></select></label></div>
+        <div class="form-grid"><label>Casa<input id="matchEditHome" required></label><label>Trasferta<input id="matchEditAway" required></label></div>
+        <div class="form-grid"><label>Data<input id="matchEditDate" type="date" required></label><label>Ora<input id="matchEditTime" type="time" required></label></div>
+        <label>Stato<select id="matchEditStatus"><option value="scheduled">Programmata</option><option value="finished">Terminata</option><option value="postponed">Rinviata</option></select></label>
+        <div class="modal-actions"><button type="button" id="cancelMatchEdit" class="ghost dark">Annulla</button><button type="submit" class="primary">Salva partita</button></div>
+      </form>
+    </div>
+  </div>
+
+  <section id="admin" class="screen">
+    <div class="section-head"><button class="back" data-screen="dashboard">‹</button><div><span class="eyebrow">ADMIN</span><h2>Amministrazione</h2></div></div>
+    <div class="card">
+      <h3>Regole della lega</h3>
+      <div class="rule"><b>3 punti</b><span>1° classificato</span></div>
+      <div class="rule"><b>2 punti</b><span>2° classificato</span></div>
+      <div class="rule"><b>1 punto</b><span>3° classificato</span></div>
+      <div class="rule"><b>🚫 Autovoto</b><span>Non consentito</span></div>
+      <div class="rule"><b>🔒 Segretezza</b><span>Voti visibili solo all'Admin</span></div>
+    </div>
+    <div class="card">
+      <h3>👁️ Visibilità Player</h3>
+      <p class="muted">Scegli quali sezioni della Home devono essere visibili agli account Player. Le impostazioni valgono per tutta la lega.</p>
+      <form id="playerVisibilityForm" class="form-grid">
+        <label><input type="checkbox" id="visMatch"> 📋 Distinta di Gara</label>
+        <label><input type="checkbox" id="visPlayed"> 🏟️ Partite disputate</label>
+        <label><input type="checkbox" id="visPlayers"> 👥 Rosa squadra</label>
+        <label><input type="checkbox" id="visStoricoSquadra"> 📊 Classifiche Squadra</label>
+        <div class="modal-actions" style="grid-column:1/-1"><button class="primary" type="submit">💾 Salva visibilità Player</button></div>
+      </form>
+      <p id="playerVisibilityMsg" class="success"></p>
+    </div>
+    <div class="card superadmin-only hidden">
+      <h3>👑 Gestione Admin</h3>
+      <p class="muted">Solo il Super Admin può promuovere o rimuovere il ruolo Admin. Il Super Admin non può essere modificato dagli Admin ordinari.</p>
+      <div id="adminManagementList"></div>
+    </div>
+    <div class="card">
+      <h3>Registrazioni Player</h3>
+      <p class="muted">Qui trovi gli account registrati che devono ancora essere associati a un giocatore della rosa. Le password non sono mai visibili all'Admin.</p>
+      <div id="pendingRegistrations"></div>
+    </div>
+    <div class="card">
+      <h3>Gestione rosa</h3>
+      <p class="muted">Crea e gestisci i giocatori della squadra direttamente da Best&Fairest.</p>
+      <form id="addPlayerForm" class="form-grid">
+        <label>Nome<input id="addPlayerNome" required></label>
+        <label>Cognome<input id="addPlayerCognome" required></label>
+        <div class="modal-actions" style="grid-column:1/-1"><button class="primary" type="submit">＋ Aggiungi giocatore</button></div>
+      </form>
+      <div id="adminPlayersList"></div>
+    </div>
+    <div class="card">
+      <h3>Stato partita</h3>
+      <p class="muted">Autenticazione, giocatori, partite e voti sono gestiti tramite Firebase Firestore. La sicurezza effettiva è demandata alle Security Rules.</p>
+    </div>
+  </section>
+</main>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-functions-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="js/firebase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js?v=8.04"></script>
+
+<style>
+.bf-a352-card{margin-top:24px;padding:18px;border-radius:18px;background:rgba(127,127,127,.07);border:1px solid rgba(127,127,127,.16)}
+.bf-a352-title h3{margin:0 0 5px}.bf-a352-title p{margin:0 0 15px;opacity:.72}
+.bf-a352-table-wrap{overflow:auto;border-radius:14px}
+.bf-a352-table{width:100%;border-collapse:collapse;min-width:820px}
+.bf-a352-table th,.bf-a352-table td{padding:9px 10px;border-bottom:1px solid rgba(127,127,127,.18);text-align:center}
+.bf-a352-table th:first-child,.bf-a352-table td:first-child{text-align:left}
+.bf-a352-player{font-weight:650}.bf-a352-net{font-size:1.05rem}.bf-a352-empty{padding:18px;opacity:.7}
+</style>
+
+</body>
+</html>
