@@ -81,18 +81,24 @@ service cloud.firestore {
           'first',
           'second',
           'third',
-          'votes'
+          'votes',
+          'malus',
+          'net'
         ])
         && request.resource.data.points is int
         && request.resource.data.first is int
         && request.resource.data.second is int
         && request.resource.data.third is int
         && request.resource.data.votes is int
+        && request.resource.data.malus is int
+        && request.resource.data.net is int
         && request.resource.data.points >= 0
         && request.resource.data.first >= 0
         && request.resource.data.second >= 0
         && request.resource.data.third >= 0
-        && request.resource.data.votes >= 0;
+        && request.resource.data.votes >= 0
+        && request.resource.data.malus >= 0
+        && request.resource.data.net == request.resource.data.points - request.resource.data.malus;
     }
 
 
@@ -639,7 +645,12 @@ service cloud.firestore {
                playerId in voteAfter(matchId).ranking
                ? 1
                : 0
-             );
+             )
+
+          // Il Player che crea il primo aggregato non può impostare malus:
+          // il valore iniziale deve essere 0 e il netto deve coincidere con i punti.
+          && request.resource.data.malus == 0
+          && request.resource.data.net == request.resource.data.points;
 
 
         // ---------------------------------------------------
@@ -715,7 +726,13 @@ service cloud.firestore {
                playerId in voteAfter(matchId).ranking
                ? 1
                : 0
-             );
+             )
+
+          // Il Player non può modificare il malus. Mantiene quello esistente
+          // (0 se il vecchio documento non lo aveva) e il netto resta sempre
+          // matematicamente coerente con punti e malus.
+          && request.resource.data.malus == (('malus' in resource.data) ? resource.data.malus : 0)
+          && request.resource.data.net == request.resource.data.points - request.resource.data.malus;
 
 
         // Solo Admin può cancellare gli aggregati.

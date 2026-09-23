@@ -142,7 +142,7 @@ registerForm?.addEventListener('submit', async (event) => {
   try{
     const cred=await auth.createUserWithEmailAndPassword(email,password);
     await db.collection('users').doc(cred.user.uid).set({
-      nome, cognome, email, role:'player', leagueId:'serie-a1-prato-maschile', active:false, playerId:null,
+      nome, cognome, email, role:'player', leagueId:'demo', active:false, playerId:null,
       registrationStatus:'pending', registeredAt:firebase.firestore.FieldValue.serverTimestamp()
     });
     await cred.user.sendEmailVerification();

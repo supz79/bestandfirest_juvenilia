@@ -1721,7 +1721,7 @@ label{display:block;font-weight:700;margin:14px 0}select{display:block;width:100
 .ranking-score-detail{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;opacity:.9;margin-top:3px}.ranking-score-detail span{white-space:nowrap}
 
 
-/* A35.2 - Riepilogo stagione ripristinato nello Storico Squadra. */
+/* A35.2 - Riepilogo stagione ripristinato nello Classifiche Squadra. */
 .storico-season-summary{margin-top:16px;}
 .storico-season-head{margin-bottom:14px;}
 .storico-season-net{font-weight:800;}
@@ -1738,7 +1738,7 @@ label{display:block;font-weight:700;margin:14px 0}select{display:block;width:100
 
 
 /* A35.3 - FIX RIEPILOGO STAGIONE SU SMARTPHONE
-   Il riepilogo stagionale deve rimanere sempre visibile nell'area Storico Squadra.
+   Il riepilogo stagionale deve rimanere sempre visibile nell'area Classifiche Squadra.
    Su mobile la tabella viene sostituita dalle card verticali, senza nascondere
    l'intero contenitore. */
 .storico-season-summary{display:block !important;visibility:visible !important;opacity:1 !important;}

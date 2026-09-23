@@ -138,12 +138,12 @@
     </div>
 
     <div class="grid two">
-      <button class="action card" data-screen="match"><span>📋</span><b>Gestisci partita</b><small>Distinta e votazione</small></button>
-      <button class="action card" data-screen="ranking"><span>🏆</span><b>Classifiche</b><small>Giornata e cumulativa</small></button>
+      <button class="action card" data-screen="match"><span>📋</span><b>Distinta di Gara</b><small>Distinta e votazione</small></button>
+      <button class="action card" data-screen="storicoSquadra"><span>📊</span><b>Classifiche Squadra</b><small>Voti, malus e statistiche</small></button>
       <button class="action card" data-screen="players"><span>👥</span><b>Rosa squadra</b><small>Giocatori registrati</small></button>
-      <button class="action card" data-screen="played"><span>🏟️</span><b>Partite disputate</b><small>Risultati, statistiche e MVP</small></button>
+      <button class="action card" data-screen="played"><span>🏟️</span><b>Partite disputate</b><small>Risultati e statistiche</small></button>
       <button class="action card admin-only" data-screen="admin"><span>⚙️</span><b>Amministrazione</b><small>Gestione lega</small></button>
-      <button class="action card admin-only" data-screen="calendar"><span>📅</span><b>Calendario</b><small>Importa e modifica le partite</small></button> <button class="action card admin-only" data-screen="storicoSquadra"><span>📊</span><b>Storico Squadra</b><small>Voti, malus e partecipazione</small></button>
+      <button class="action card admin-only" data-screen="calendar"><span>📅</span><b>Calendario</b><small>Importa e modifica le partite</small></button>
     </div>
 
     <div class="card status" id="dashboardMatchCard" role="button" tabindex="0" aria-label="Apri partita corrente">
@@ -207,12 +207,6 @@
     <div id="playedMatchesList"></div>
   </section>
 
-  <section id="ranking" class="screen">
-    <div class="section-head"><button class="back" data-screen="dashboard">‹</button><div><span class="eyebrow">CLASSIFICHE</span><h2>Best&Fairest</h2></div></div>
-    <div class="tabs"><button class="tab active" data-tab="day">Giornata</button><button class="tab" data-tab="season">Generale</button></div>
-    <div class="card"><div id="rankingTable"></div></div>
-  </section>
-
   <section id="players" class="screen">
     <div class="section-head"><button class="back" data-screen="dashboard">‹</button><div><span class="eyebrow">ROSA</span><h2>Giocatori</h2></div></div>
     <div class="card"><div id="playersTable"></div><div id="seasonStatsTable" class="stats-season"></div></div>
@@ -222,7 +216,7 @@
   <section id="storicoSquadra" class="screen">
     <div class="section-head">
       <button class="back" data-screen="dashboard">‹</button>
-      <div><span class="eyebrow">ADMIN · STAGIONE</span><h2>Storico Squadra</h2></div>
+      <div><span class="eyebrow">SQUADRA · STAGIONE</span><h2>Classifiche Squadra</h2></div>
     </div>
     <div class="card storico-intro">
       <h3>Andamento giornata per giornata</h3>
@@ -274,9 +268,16 @@
       <div class="rule"><b>🔒 Segretezza</b><span>Voti visibili solo all'Admin</span></div>
     </div>
     <div class="card">
-      <h3>Classifiche</h3>
-      <p class="muted">Gli aggregati pubblici vengono ricostruiti a partire dai voti effettivamente presenti in Firebase. Usa il ricalcolo dopo eventuali interventi manuali sui documenti.</p>
-      <button id="recalculateResultsBtn" class="primary">🔄 Ricalcola classifiche</button>
+      <h3>👁️ Visibilità Player</h3>
+      <p class="muted">Scegli quali sezioni della Home devono essere visibili agli account Player. Le impostazioni valgono per tutta la lega.</p>
+      <form id="playerVisibilityForm" class="form-grid">
+        <label><input type="checkbox" id="visMatch"> 📋 Distinta di Gara</label>
+        <label><input type="checkbox" id="visPlayed"> 🏟️ Partite disputate</label>
+        <label><input type="checkbox" id="visPlayers"> 👥 Rosa squadra</label>
+        <label><input type="checkbox" id="visStoricoSquadra"> 📊 Classifiche Squadra</label>
+        <div class="modal-actions" style="grid-column:1/-1"><button class="primary" type="submit">💾 Salva visibilità Player</button></div>
+      </form>
+      <p id="playerVisibilityMsg" class="success"></p>
     </div>
     <div class="card superadmin-only hidden">
       <h3>👑 Gestione Admin</h3>
@@ -312,7 +313,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="js/firebase.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/app.js?v=8.01"></script>
+<script src="js/app.js?v=8.04"></script>
 
 <style>
 .bf-a352-card{margin-top:24px;padding:18px;border-radius:18px;background:rgba(127,127,127,.07);border:1px solid rgba(127,127,127,.16)}
