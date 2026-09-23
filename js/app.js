@@ -336,6 +336,10 @@ const BUILTIN_LEAGUE_THEMES = {
     muted: '#5a7463',
     logo: 'assets/juvenilia-uras-logo.jpg',
     logoAlt: 'Stemma Juvenilia Hockey Uras'
+  },
+  'serie-a1-prato-maschile': {
+    logo: 'assets/juvenilia-uras-logo.jpg',
+    logoAlt: 'Stemma Juvenilia Hockey Uras'
   }
 };
 
